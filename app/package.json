@@ -13,6 +13,7 @@
     "@types/react-dom": "16.9.3",
     "@typescript-eslint/eslint-plugin": "1.13.0",
     "@typescript-eslint/parser": "1.13.0",
+    "chai": "4.2.0",
     "eslint": "5.16.0",
     "eslint-plugin-ascii": "1.0.0",
     "eslint-plugin-bem-xjst": "2.3.0",
@@ -22,14 +23,20 @@
     "eslint-plugin-react-hooks": "1.6.0",
     "eslint-config-prettier": "4.3.0",
     "eslint-plugin-prettier": "3.1.0",
+    "hermione": "2.12.6",
+    "html-reporter": "5.3.2",
     "prettier": "1.17.1",
     "react-scripts": "3.2.0",
+    "selenium-standalone": "6.16.0",
     "typescript": "3.5.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "hermione": "./node_modules/.bin/hermione gui --save --retry=0 && rm -rf ./images && rm -rf ./hermione",
+    "selenium-server:install": "./node_modules/.bin/selenium-standalone install",
+    "selenium-server:start": "./node_modules/.bin/selenium-standalone start"
   },
   "eslintConfig": {
     "extends": "react-app"
