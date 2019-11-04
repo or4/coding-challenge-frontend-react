@@ -1,12 +1,12 @@
 import { Action } from 'redux';
 import { IIncidentRequestOptions } from 'types';
 
-export enum ActionTypes {
-    INCIDENTS_REQUEST = 'Incidents/incidents request',
+export enum IncidentsActionType {
+    IncidentsRequest = 'Incidents/incidents request',
 }
 
 export class IncidentsRequest implements Action {
-    public readonly type = ActionTypes.INCIDENTS_REQUEST;
+    public readonly type = IncidentsActionType.IncidentsRequest;
     public options: IIncidentRequestOptions;
 
     public constructor(options: IIncidentRequestOptions) {
@@ -14,4 +14,4 @@ export class IncidentsRequest implements Action {
     }
 }
 
-export type ActionsAll = IncidentsRequest;
+export type IncidentsActions = IncidentsRequest;

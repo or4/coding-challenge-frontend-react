@@ -3,7 +3,7 @@ import { IIncidentRequestOptions } from 'types';
 
 describe('Check Incident actions', () => {
     describe('IncidentsRequest', () => {
-        it('should return action list of bikes', () => {
+        it('should create action for all cases', () => {
             const options: IIncidentRequestOptions = {};
 
             expect(new IncidentsRequest(options)).toEqual({
@@ -12,7 +12,7 @@ describe('Check Incident actions', () => {
             });
         });
 
-        it('should return action thefts in Berlin', () => {
+        it('should create action for thefts in Berlin', () => {
             const options: IIncidentRequestOptions = {
                 incidentType: 'theft',
                 proximity: 'Berlin',
@@ -29,7 +29,7 @@ describe('Check Incident actions', () => {
             });
         });
 
-        it('should return action with incidentType', () => {
+        it('should create action with incidentType option', () => {
             const options: IIncidentRequestOptions = {
                 incidentType: 'theft',
             };
@@ -42,7 +42,7 @@ describe('Check Incident actions', () => {
             });
         });
 
-        it('should return action with proximity and proximitySquare', () => {
+        it('should create action with proximity and proximitySquare options', () => {
             const options: IIncidentRequestOptions = {
                 proximity: 'Berlin',
                 proximitySquare: 100,

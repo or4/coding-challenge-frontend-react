@@ -16,5 +16,10 @@ module.exports =  {
 		"@typescript-eslint/no-var-requires": 0,
 		"@typescript-eslint/no-use-before-define": 0,
 		"@typescript-eslint/interface-name-prefix": 0,
-	}
+    },
+    settings: {
+        react: {
+            version: require('./package.json').dependencies.react,
+        },
+    },
 };
