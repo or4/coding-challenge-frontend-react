@@ -1,4 +1,5 @@
-import { createReducer } from 'core/utiils';
+import { createReducer } from 'core/utils/createReducer';
+
 import { IncidentsActionType, IncidentsActions } from './actions';
 
 export interface IIncidentsState {

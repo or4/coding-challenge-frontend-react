@@ -1,6 +1,7 @@
-import { isFunction } from 'lodash';
-import { createReducer } from '../utiils';
 import { Action } from 'redux';
+import { isFunction } from 'lodash';
+
+import { createReducer } from '../createReducer';
 
 describe('Check createReducer', () => {
     const initialState = {};

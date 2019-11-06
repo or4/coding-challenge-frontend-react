@@ -1,5 +1,6 @@
 import { AnyAction } from 'redux';
 import { IIncidentRequestOptions } from 'types';
+
 import { incidentsReducer } from '../reducers';
 import { IncidentsRequest } from '../actions';
 
@@ -10,6 +11,7 @@ describe('Incidents reducer', () => {
         // @ts-ignore
         const EmptyAction: AnyAction = {};
 
+        // @ts-ignore
         expect(incidentsReducer(initialState, EmptyAction)).toEqual({
             requesting: false,
         });

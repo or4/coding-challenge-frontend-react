@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+
 import { IIncidentsState, incidentsReducer } from './incidents/reducers';
 import { IncidentsActions } from './incidents/actions';
 

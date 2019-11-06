@@ -5,3 +5,7 @@ export interface IIncidentRequestOptions {
     proximity?: string; // Center of location for proximity search
     proximitySquare?: number; // Size of the proximity search
 }
+
+export interface IIncident {
+    id: number;
+}

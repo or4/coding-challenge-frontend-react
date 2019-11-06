@@ -1,7 +1,8 @@
-import { store } from '../store';
 import { reducers, ApplicationState } from 'core/reducers';
 import { IncidentsRequest } from 'core/incidents/actions';
 import { IIncidentRequestOptions } from 'types';
+
+import { store } from '../store';
 
 describe('Redux App', () => {
     // @ts-ignore
