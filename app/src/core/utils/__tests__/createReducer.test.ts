@@ -4,11 +4,17 @@ import { isFunction } from 'lodash';
 import { createReducer } from '../createReducer';
 
 describe('Check createReducer', () => {
-    const initialState = {};
-    const state = {};
-    const resultOfAction = { done: true };
-    const handlers: { [key: string]: (state: unknown, action: Action) => unknown } = { action: () => resultOfAction };
-    const action = { type: 'action' };
+    interface State {
+        done?: boolean;
+    }
+
+    const initialState: State = {};
+    const state: State = {};
+    const resultOfAction: State = { done: true };
+    const handlers = {
+        action: () => resultOfAction,
+    };
+    const action: Action = { type: 'action' };
 
     it('should return function', () => {
         expect(isFunction(createReducer({}, {}))).toBe(true);
@@ -43,9 +49,8 @@ describe('Check createReducer', () => {
     });
 
     it('should return empty object if not defined handlers', () => {
+        const handlers = undefined;
         // @ts-ignore
-        const handlers: { [key: string]: (state: unknown, action: Action) => unknown } = undefined;
-
         const reducer = createReducer(initialState, handlers);
 
         expect(reducer(undefined, action)).toEqual({});
