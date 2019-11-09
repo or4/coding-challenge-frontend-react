@@ -2,6 +2,7 @@ import { takeEvery, put, call } from 'redux-saga/effects';
 import { api } from 'core/api';
 
 import { IncidentsActionType, IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from './actions';
+import { IIncident, IIncidentDb } from 'types';
 
 export function* incidents({ options }: IncidentsRequest) {
     const result = yield call(api.get, '/incidents', options);
@@ -12,8 +13,18 @@ export function* incidents({ options }: IncidentsRequest) {
         return yield put(new IncidentsRequestFail({ status, data }));
     }
 
-    yield put(new IncidentsRequestSuccess(data.incidents));
+    yield put(new IncidentsRequestSuccess(transform(data.incidents)));
 }
+
+export const transform: (incidents: IIncidentDb[]) => IIncident[] = incidents =>
+    incidents.map(({ id, title, description, address, media, occurredAt }) => ({
+        id,
+        title,
+        description,
+        address,
+        media,
+        occurredAt,
+    }));
 
 // takeEvery is specially chosen for monitoring request count
 export default [takeEvery(IncidentsActionType.IncidentsRequest, incidents)];

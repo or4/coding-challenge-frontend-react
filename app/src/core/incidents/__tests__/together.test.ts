@@ -7,12 +7,13 @@ import { api } from 'core/api';
 import { reducers, ApplicationState } from 'core/reducers';
 import { sagas } from 'core/sagas';
 import { actionToPlainObject } from 'core/store';
+import { applyActions } from 'core/utils/applyActions';
 import { moxiosWait } from 'core/utils/moxiosWait';
 import { IIncident, IIncidentRequestOptions } from 'types';
 
 import { IncidentsRequestSuccess, IncidentsRequest, IncidentsRequestFail } from '../actions';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
-import { applyActions } from 'core/utils/applyActions';
+import { transform } from '../sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware, actionToPlainObject];
@@ -46,16 +47,18 @@ describe('Incidents redux tests', () => {
             await moxiosWait();
 
             let request = moxios.requests.mostRecent();
-            await request.respondWith({ status: 200, response: { incidents } });
+            await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
             const actions = store.getActions();
-            expect(actions).toEqual([new IncidentsRequest(options), new IncidentsRequestSuccess(incidents)]);
+            const incidentsExpected = transform(incidents);
+
+            expect(actions).toEqual([new IncidentsRequest(options), new IncidentsRequestSuccess(incidentsExpected)]);
 
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
                 incidents: {
-                    incidents,
+                    incidents: incidentsExpected,
                     requesting: false,
                 },
             });
@@ -80,13 +83,15 @@ describe('Incidents redux tests', () => {
             await request.respondWith({ status: 200, response: { incidents } });
 
             const actions = store.getActions();
-            expect(actions).toEqual([new IncidentsRequest(options), new IncidentsRequestSuccess(incidents)]);
+            const incidentsExpected = transform(incidents);
+
+            expect(actions).toEqual([new IncidentsRequest(options), new IncidentsRequestSuccess(incidentsExpected)]);
 
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
                 incidents: {
-                    incidents,
+                    incidents: incidentsExpected,
                     requesting: false,
                 },
             });

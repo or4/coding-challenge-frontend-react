@@ -5,7 +5,7 @@ import { IncidentsRequest } from 'core/incidents/actions';
 export const App: React.FC = () => {
     useEffect(() => {
         // @ts-ignore
-        store.dispatch(new IncidentsRequest({ incident_type: 'th``eft', proximity: 'Be``rlin', proximitySquare: 100 }));
+        store.dispatch(new IncidentsRequest({ incidentType: 'theft', proximity: 'Berlin', proximitySquare: 100 }));
     });
 
     return (

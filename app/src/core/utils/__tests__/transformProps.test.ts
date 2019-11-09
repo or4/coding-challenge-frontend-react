@@ -83,6 +83,17 @@ describe('Check transformProps', () => {
 
             expect(toCamelCase(data)).toEqual(expected);
         });
+
+        it('should convert type of array right', () => {
+            const data = {
+                array: [{ img_src: true }],
+            };
+            const expected = {
+                array: [{ imgSrc: true }],
+            };
+
+            expect(toCamelCase(data)).toEqual(expected);
+        });
     });
 });
 

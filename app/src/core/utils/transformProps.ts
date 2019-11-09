@@ -1,4 +1,5 @@
 import { isObject } from 'lodash';
+import { isArray } from 'util';
 
 export function toSnakeCaseString(value: string) {
     return value
@@ -27,7 +28,11 @@ export function toCamelCaseString(value: string) {
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export function toCamelCase(obj: Record<string, any>) {
+export function toCamelCase(obj: any): object {
+    if (isArray(obj)) {
+        return obj.map(toCamelCase);
+    }
+
     const result: Record<string, any> = {};
 
     for (const key of Object.keys(obj)) {

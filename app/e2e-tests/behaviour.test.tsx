@@ -1,6 +1,6 @@
 describe('Incidents list', () => {
     describe('I want to see a list of reported bike thefts for the Berlin area.', () => {
-        describe('For each item I want to see title, description, image, date, address', () => {});
+        describe('For each item I want to see title, description, image, occurredAt, address', () => {});
 
         describe('I want that date must be in format "Tue Nov 27 2018"', () => {});
         describe('I want that address must be in format "Berlin, 10405, DE"', () => {});
