@@ -2,8 +2,10 @@ import { create } from 'apisauce';
 
 import { toSnakeCase } from './utils/transformProps';
 
+const API_END_POINT = 'https://bikewise.org:443/api/v2';
+
 export const config = {
-    baseURL: 'https://bikewise.org:443/api/v2/',
+    baseURL: API_END_POINT,
     headers: {
         Accept: 'application/json, text/plain, */*',
         'Access-Control-Allow-Origin': '*',

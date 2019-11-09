@@ -1,7 +1,5 @@
-import { createReducer } from 'core/utils/createReducer';
-
-import { IncidentsActionType, IncidentsActions, IncidentsRequestSuccess } from './actions';
 import { IIncident } from 'types';
+import { IncidentsActionType, IncidentsActions } from './actions';
 
 export interface IIncidentsState {
     requesting?: boolean;
@@ -10,17 +8,18 @@ export interface IIncidentsState {
 
 export const initialState: IIncidentsState = {};
 
-const handlers = {
-    [IncidentsActionType.IncidentsRequest]: (state: IIncidentsState = initialState) => {
-        return { ...state, requesting: true };
-    },
-    [IncidentsActionType.IncidentsRequestSuccess]: (
-        state: IIncidentsState = initialState,
-        action: IncidentsRequestSuccess
-    ) => {
-        return { ...state, requesting: false, incidents: action.incidents };
-    },
-};
+export const incidentsReducer = (state: IIncidentsState = initialState, action: IncidentsActions) => {
+    switch (action.type) {
+        case IncidentsActionType.IncidentsRequest:
+            return { ...state, requesting: true };
 
-// @ts-ignore
-export const incidentsReducer = createReducer<IIncidentsState, IncidentsActions>(initialState, handlers);
+        case IncidentsActionType.IncidentsRequestSuccess:
+            return { ...state, requesting: false, incidents: action.incidents };
+
+        case IncidentsActionType.IncidentsRequestFail:
+            return { ...state, requesting: false, error: action.error };
+
+        default:
+            return state;
+    }
+};

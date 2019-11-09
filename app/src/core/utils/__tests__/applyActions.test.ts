@@ -34,43 +34,28 @@ describe('Check applyActions', () => {
         expect(isFunction(applyActions)).toBe(true);
     });
 
-    it('should has 3 arguments', () => {
-        expect(applyActions.length).toBe(3);
-    });
-
     it('should return right state for one action', () => {
         const state = applyActions(reducer, initialState, [actions[1]]);
 
-        expect(state).toEqual({
-            action2: 'done',
-        });
+        expect(state).toEqual({ action2: 'done' });
     });
 
     it('should return right state for 2 actions', () => {
         const state = applyActions(reducer, initialState, actions);
 
-        expect(state).toEqual({
-            action1: 'done',
-            action2: 'done',
-        });
+        expect(state).toEqual({ action1: 'done', action2: 'done' });
     });
 
     it('should return right state when set initialState', () => {
         const state = applyActions(reducer, { initialValue: 'has set' }, actions);
 
-        expect(state).toEqual({
-            initialValue: 'has set',
-            action1: 'done',
-            action2: 'done',
-        });
+        expect(state).toEqual({ initialValue: 'has set', action1: 'done', action2: 'done' });
     });
 
     it('should return right state with empty actions', () => {
         const state = applyActions(reducer, { initialValue: 'has set' }, []);
 
-        expect(state).toEqual({
-            initialValue: 'has set',
-        });
+        expect(state).toEqual({ initialValue: 'has set' });
     });
 
     it('should return undefined when app inital state is undefined', () => {

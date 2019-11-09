@@ -4,6 +4,7 @@ import { IIncidentRequestOptions, IIncident } from 'types';
 export enum IncidentsActionType {
     IncidentsRequest = 'Incidents/incidents request',
     IncidentsRequestSuccess = 'Incidents/incidents request success',
+    IncidentsRequestFail = 'Incidents/incidents request fail',
 }
 
 export class IncidentsRequest implements Action {
@@ -24,4 +25,13 @@ export class IncidentsRequestSuccess implements Action {
     }
 }
 
-export type IncidentsActions = IncidentsRequest | IncidentsRequestSuccess;
+export class IncidentsRequestFail implements Action {
+    public readonly type = IncidentsActionType.IncidentsRequestFail;
+    public error: object;
+
+    public constructor(error: object) {
+        this.error = error;
+    }
+}
+
+export type IncidentsActions = IncidentsRequest | IncidentsRequestSuccess | IncidentsRequestFail;

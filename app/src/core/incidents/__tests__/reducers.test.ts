@@ -1,68 +1,106 @@
-import { AnyAction } from 'redux';
+import createHttpError from 'http-errors';
+import { promisify } from 'util';
 import { IIncidentRequestOptions, IIncident } from 'types';
 
 import { incidentsReducer, IIncidentsState } from '../reducers';
-import { IncidentsRequest, IncidentsRequestSuccess } from '../actions';
+import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
+import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Incidents reducer', () => {
-    let initialState: IIncidentsState | undefined;
-
-    beforeEach(() => {
-        initialState = undefined;
-    });
+    let state: IIncidentsState | undefined;
+    const initialState: IIncidentsState = {};
 
     describe('common', () => {
         it('should return init state', () => {
-            // @ts-ignore
-            const EmptyAction: AnyAction = {};
+            state = undefined;
 
             // @ts-ignore
-            expect(incidentsReducer(initialState, EmptyAction)).toEqual({});
+            const ActionWithoutType: IncidentsRequest = {};
+
+            expect(incidentsReducer(state, ActionWithoutType)).toEqual(initialState);
+        });
+
+        it('should not work without action', async () => {
+            state = undefined;
+
+            // @ts-ignore
+            const ActionWithoutType: IncidentsRequest = undefined;
+
+            await expect(promisify(incidentsReducer)(state, ActionWithoutType)).rejects.toThrow(
+                `Cannot read property 'type' of undefined`
+            );
         });
     });
 
     describe('IncidentsRequest', () => {
-        it('should return state after apply IncidentsRequest action', () => {
-            expect(incidentsReducer(initialState, new IncidentsRequest({}))).toEqual({
+        it('should return right state with empty options', () => {
+            const options: IIncidentRequestOptions = {};
+            expect(incidentsReducer(state, new IncidentsRequest(options))).toEqual({
                 requesting: true,
             });
         });
 
-        it('should return state after apply IncidentsRequest action with options', () => {
+        it('should return right state action with options', () => {
             const options: IIncidentRequestOptions = {
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 100,
             };
 
-            expect(incidentsReducer(initialState, new IncidentsRequest(options))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequest(options))).toEqual({
                 requesting: true,
             });
         });
     });
 
     describe('IncidentsRequestSuccess', () => {
-        it('should return state without requesting flag', () => {
-            initialState = {
+        it('should return right state with empty incidents', () => {
+            state = {
                 requesting: true,
             };
             const incidents: IIncident[] = [];
 
-            expect(incidentsReducer(initialState, new IncidentsRequestSuccess(incidents))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
                 requesting: false,
                 incidents: [],
             });
         });
 
-        it('should return state with incidents', () => {
-            initialState = {
+        it('should return right state with incidents', () => {
+            state = {
                 requesting: true,
             };
-            const incidents: IIncident[] = [{ id: 1 }, { id: 2 }, { id: 3 }];
+            const incidents: IIncident[] = getFakeIncidents(3);
 
-            expect(incidentsReducer(initialState, new IncidentsRequestSuccess(incidents))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
                 requesting: false,
-                incidents: [{ id: 1 }, { id: 2 }, { id: 3 }],
+                incidents,
+            });
+        });
+    });
+
+    describe('IncidentsRequestFail', () => {
+        it('should return state with error', () => {
+            state = {
+                requesting: true,
+            };
+            const error = createHttpError(400, 'BadRequest');
+
+            expect(incidentsReducer(state, new IncidentsRequestFail(error))).toEqual({
+                requesting: false,
+                error,
+            });
+        });
+
+        it('should work without error', () => {
+            state = {
+                requesting: true,
+            };
+            // @ts-ignore
+            const error: object = undefined;
+
+            expect(incidentsReducer(state, new IncidentsRequestFail(error))).toEqual({
+                requesting: false,
             });
         });
     });

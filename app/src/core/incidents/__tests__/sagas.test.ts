@@ -1,11 +1,13 @@
-import { isFunction } from 'lodash';
 import { call, put } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
+import { isFunction } from 'lodash';
+
 import { api } from 'core/api';
 import { IIncidentRequestOptions, IIncident } from 'types';
 
 import { incidents as incidentsSaga } from '../sagas';
-import { IncidentsRequest, IncidentsRequestSuccess } from '../actions';
+import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
+import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Check saga for IncidentsRequest', () => {
     it('should exists', () => {
@@ -13,17 +15,19 @@ describe('Check saga for IncidentsRequest', () => {
     });
 
     it('should proccess api call', () => {
-        const action = new IncidentsRequest({});
+        const emptyOptions = {};
+        const action = new IncidentsRequest(emptyOptions);
         const generator = cloneableGenerator(incidentsSaga)(action);
 
-        expect(generator.next().value).toEqual(call(api.get, 'incidents', {}));
+        expect(generator.next().value).toEqual(call(api.get, '/incidents', {}));
     });
 
     it('should return success action with empty data', () => {
-        const action = new IncidentsRequest({});
+        const emptyOptions = {};
+        const action = new IncidentsRequest(emptyOptions);
         const generator = cloneableGenerator(incidentsSaga)(action);
 
-        expect(generator.next().value).toEqual(call(api.get, 'incidents', {}));
+        expect(generator.next().value).toEqual(call(api.get, '/incidents', emptyOptions));
 
         const incidents: IIncident[] = [];
         const response = { data: { incidents }, status: 200 };
@@ -41,7 +45,7 @@ describe('Check saga for IncidentsRequest', () => {
         const action = new IncidentsRequest(options);
         const generator = cloneableGenerator(incidentsSaga)(action);
 
-        expect(generator.next().value).toEqual(call(api.get, 'incidents', options));
+        expect(generator.next().value).toEqual(call(api.get, '/incidents', options));
 
         const incidents: IIncident[] = [];
         const response = { data: { incidents }, status: 200 };
@@ -50,7 +54,7 @@ describe('Check saga for IncidentsRequest', () => {
         expect(generator.next().done).toEqual(true);
     });
 
-    it('should return success action with not empty incidents', () => {
+    it('should return success action with incidents', () => {
         const options: IIncidentRequestOptions = {
             incidentType: 'theft',
             proximity: 'Berlin',
@@ -59,12 +63,29 @@ describe('Check saga for IncidentsRequest', () => {
         const action = new IncidentsRequest(options);
         const generator = cloneableGenerator(incidentsSaga)(action);
 
-        expect(generator.next().value).toEqual(call(api.get, 'incidents', options));
+        expect(generator.next().value).toEqual(call(api.get, '/incidents', options));
 
-        const incidents: IIncident[] = [{ id: 1 }, { id: 2 }, { id: 3 }];
+        const incidents: IIncident[] = getFakeIncidents(3);
         const response = { data: { incidents }, status: 200 };
         // @ts-ignore
         expect(generator.next(response).value).toEqual(put(new IncidentsRequestSuccess(incidents)));
+        expect(generator.next().done).toEqual(true);
+    });
+
+    it('should return fail action when status is not 200', () => {
+        const options: IIncidentRequestOptions = {
+            incidentType: 'theft',
+            proximity: 'Berlin',
+            proximitySquare: 100,
+        };
+        const action = new IncidentsRequest(options);
+        const generator = cloneableGenerator(incidentsSaga)(action);
+
+        expect(generator.next().value).toEqual(call(api.get, '/incidents', options));
+
+        const response = { data: { error: 'Bad request' }, status: 400 };
+        // @ts-ignore
+        expect(generator.next(response).value).toEqual(put(new IncidentsRequestFail(response)));
         expect(generator.next().done).toEqual(true);
     });
 });

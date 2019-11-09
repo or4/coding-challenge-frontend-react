@@ -3,7 +3,7 @@ import { config, api, requestInterceptor } from 'core/api';
 describe('Check api', () => {
     it('should equal config', () => {
         expect(config).toEqual({
-            baseURL: 'https://bikewise.org:443/api/v2/',
+            baseURL: 'https://bikewise.org:443/api/v2',
             headers: {
                 Accept: 'application/json, text/plain, */*',
                 'Access-Control-Allow-Origin': '*',
@@ -18,13 +18,26 @@ describe('Check api', () => {
     });
 
     it('should return converted request params', () => {
-        const req = {
-            params: { someOptions: 'text' },
-        };
-        const expected = {
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            params: { some_options: 'text' },
-        };
+        const req = { params: { caseOptions: 'text' } };
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        const expected = { params: { case_options: 'text' } };
+
+        expect(requestInterceptor(req)).toEqual(expected);
+    });
+
+    it('should return converted request params with many options', () => {
+        const req = { params: { caseOptions: 'text', text: 'text' } };
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        const expected = { params: { case_options: 'text', text: 'text' } };
+
+        expect(requestInterceptor(req)).toEqual(expected);
+    });
+
+    it('should not convert inner objects', () => {
+        const req = { params: { inner: { caseOptions: 'text' } } };
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        const expected = { params: { inner: { caseOptions: 'text' } } };
+
         expect(requestInterceptor(req)).toEqual(expected);
     });
 });

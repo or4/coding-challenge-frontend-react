@@ -6,9 +6,9 @@ import { Actions } from './actions';
 import { reducers, ApplicationState } from './reducers';
 import { sagas } from './sagas';
 
-const sagaMiddleware = createSagaMiddleware();
+export const sagaMiddleware = createSagaMiddleware();
 
-const actionToPlainObject: Middleware = () => (next: Dispatch<Action>) => <A extends Action>(action: A) => {
+export const actionToPlainObject: Middleware = () => (next: Dispatch<Action>) => <A extends Action>(action: A) => {
     return next(Object.assign({}, action));
 };
 
