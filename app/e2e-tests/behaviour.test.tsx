@@ -1,6 +1,9 @@
 describe('Incidents list', () => {
     describe('I want to see a list of reported bike thefts for the Berlin area.', () => {
-        it('should show list of incidents', () => {});
+        describe('For each item I want to see title, description, image, date, address', () => {});
+
+        describe('I want that date must be in format "Tue Nov 27 2018"', () => {});
+        describe('I want that address must be in format "Berlin, 10405, DE"', () => {});
     });
 
     // describe('I want to see the first 10 bike theft cases, with the ability to - paginate (10 cases per page).', () => {});

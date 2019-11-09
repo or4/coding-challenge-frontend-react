@@ -1,6 +1,6 @@
 import { create } from 'apisauce';
 
-import { toSnakeCase } from './utils/transformProps';
+import { toSnakeCase, toCamelCase } from './utils/transformProps';
 
 const API_END_POINT = 'https://bikewise.org:443/api/v2';
 
@@ -24,3 +24,12 @@ export const requestInterceptor = function(request) {
 };
 
 api.axiosInstance.interceptors.request.use(requestInterceptor);
+
+// @ts-ignore
+export const responseInterceptor = function(response) {
+    response.data = toCamelCase(response.data);
+
+    return response;
+};
+
+api.axiosInstance.interceptors.response.use(responseInterceptor);

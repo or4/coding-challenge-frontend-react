@@ -1,4 +1,4 @@
-import { toSnakeCase, toSnakeCaseString } from '../transformProps';
+import { toSnakeCase, toSnakeCaseString, toCamelCase, toCamelCaseString } from '../transformProps';
 
 /* eslint-disable @typescript-eslint/camelcase */
 
@@ -21,6 +21,67 @@ describe('Check transformProps', () => {
                 some_text: true,
                 another_object: { anotherText: 'text' },
             });
+        });
+    });
+
+    describe('Check toCamelCase', () => {
+        it('should return empty object', () => {
+            expect(toCamelCase({})).toEqual({});
+        });
+
+        it('should convert string from snake case to camel case', () => {
+            expect(toCamelCaseString('some_text')).toBe('someText');
+        });
+
+        it('should convert keys of first level', () => {
+            const data = {
+                first_level: true,
+            };
+            const expected = {
+                firstLevel: true,
+            };
+
+            expect(toCamelCase(data)).toEqual(expected);
+        });
+
+        it('should convert keys of second level inner objects', () => {
+            const data = {
+                first_level: true,
+                inner_object: {
+                    secod_level: true,
+                },
+            };
+            const expected = {
+                firstLevel: true,
+                innerObject: {
+                    secodLevel: true,
+                },
+            };
+
+            expect(toCamelCase(data)).toEqual(expected);
+        });
+
+        it('should convert keys of third level inner objects', () => {
+            const data = {
+                first_level: true,
+                inner_object: {
+                    secod_level: true,
+                    inner_object: {
+                        third_level: true,
+                    },
+                },
+            };
+            const expected = {
+                firstLevel: true,
+                innerObject: {
+                    secodLevel: true,
+                    innerObject: {
+                        thirdLevel: true,
+                    },
+                },
+            };
+
+            expect(toCamelCase(data)).toEqual(expected);
         });
     });
 });
