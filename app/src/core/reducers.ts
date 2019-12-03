@@ -3,10 +3,10 @@ import { combineReducers } from 'redux';
 import { IIncidentsState, incidentsReducer } from './incidents/reducers';
 import { IncidentsActions } from './incidents/actions';
 
-export const reducers = combineReducers<ApplicationState, IncidentsActions>({
+export const reducers = combineReducers<AppState, IncidentsActions>({
     incidents: incidentsReducer,
 });
 
-export interface ApplicationState {
+export interface AppState {
     incidents: IIncidentsState;
 }

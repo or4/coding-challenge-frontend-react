@@ -2,29 +2,29 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { act } from 'react-dom/test-utils';
 
-import { App } from '../App';
+import { AppWithStore } from '../App';
 
 describe('App', () => {
-    let container: HTMLDivElement | null;
+    let root: HTMLDivElement | null;
 
     beforeEach(() => {
-        container = document.createElement('div');
-        document.body.appendChild(container);
+        root = document.createElement('div');
+        document.body.appendChild(root);
     });
 
     afterEach(() => {
-        if (container) {
-            document.body.removeChild(container);
-            container = null;
+        if (root) {
+            document.body.removeChild(root);
+            root = null;
         }
     });
 
     it('renders without crashing', () => {
         act(() => {
-            ReactDOM.render(<App />, container);
+            ReactDOM.render(<AppWithStore />, root);
         });
 
-        const app = container && container.getElementsByClassName('app')[0];
+        const app = root && root.getElementsByClassName('app')[0];
 
         expect(Boolean(app)).toBe(true);
     });

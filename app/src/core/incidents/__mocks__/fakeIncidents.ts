@@ -1,8 +1,8 @@
 import { times } from 'lodash';
 import { IIncident } from 'types';
 
-export const getFakeIncidents: (amount: number) => IIncident[] = amount =>
-    times(amount, index => ({
+export const getFakeIncidents: (amount: number) => IIncident[] = amount => {
+    return times(amount, index => ({
         id: index + 1,
         address: 'Berlin, 10963, DE',
         description: "Stolen during nighttime from the house's closed yard.",
@@ -24,3 +24,4 @@ export const getFakeIncidents: (amount: number) => IIncident[] = amount =>
         updatedAt: 1573322470,
         url: 'https://bikewise.org/api/v1/incidents/109462',
     }));
+};

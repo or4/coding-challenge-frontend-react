@@ -4,7 +4,7 @@ import createSagaMiddleware from 'redux-saga';
 import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 
 import { api } from 'core/api';
-import { reducers, ApplicationState } from 'core/reducers';
+import { reducers, AppState } from 'core/reducers';
 import { sagas } from 'core/sagas';
 import { actionToPlainObject } from 'core/store';
 import { applyActions } from 'core/utils/applyActions';
@@ -29,7 +29,7 @@ describe('Incidents redux tests', () => {
     });
 
     describe('Check InicdentsRequest', () => {
-        let state: ApplicationState;
+        let state: AppState;
         let store: MockStoreEnhanced<unknown, {}>;
 
         beforeEach(() => {
@@ -101,9 +101,7 @@ describe('Incidents redux tests', () => {
 
         it('should not work with error', async done => {
             const options: IIncidentRequestOptions = {
-                incidentType: 'theft',
-                proximity: 'Berlin',
-                proximitySquare: 100,
+                proximity: 'unexpected_proximity',
             };
             const action = new IncidentsRequest(options);
             store.dispatch(action);

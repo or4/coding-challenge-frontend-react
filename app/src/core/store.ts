@@ -3,7 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import createSagaMiddleware from 'redux-saga';
 
 import { Actions } from './actions';
-import { reducers, ApplicationState } from './reducers';
+import { reducers, AppState } from './reducers';
 import { sagas } from './sagas';
 
 export const sagaMiddleware = createSagaMiddleware();
@@ -14,7 +14,7 @@ export const actionToPlainObject: Middleware = () => (next: Dispatch<Action>) =>
 
 const initialAppState = {};
 
-export const store = createStore<ApplicationState, Actions, unknown, unknown>(
+export const store = createStore<AppState, Actions, unknown, unknown>(
     reducers,
     initialAppState,
     composeWithDevTools(applyMiddleware(sagaMiddleware, actionToPlainObject))

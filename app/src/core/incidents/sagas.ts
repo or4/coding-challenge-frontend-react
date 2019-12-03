@@ -16,6 +16,7 @@ export function* incidents({ options }: IncidentsRequest) {
     yield put(new IncidentsRequestSuccess(transform(data.incidents)));
 }
 
+// pick necessary incident props
 export const transform: (incidents: IIncidentDb[]) => IIncident[] = incidents =>
     incidents.map(({ id, title, description, address, media, occurredAt }) => ({
         id,
