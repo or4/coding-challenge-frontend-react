@@ -11,7 +11,8 @@ module.exports =  {
 		sourceType:  'module',  // Allows for the use of imports
 	},
 	rules: {
-		"@typescript-eslint/explicit-function-return-type": 0,
+        "@typescript-eslint/explicit-function-return-type": 0,
+        "@typescript-eslint/no-explicit-any": 0,
 		"react/prop-types": [2, { ignore: ['children'] }],
 		"@typescript-eslint/no-var-requires": 0,
 		"@typescript-eslint/no-use-before-define": 0,

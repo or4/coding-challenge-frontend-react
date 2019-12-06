@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Incident should return component 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  cursor: pointer;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+.c0:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.c4 {
+  font-weight: 600;
+}
+
+.c2 {
+  background-image: url(https://files.bikeindex.org/uploads/Pu/196548/small_Bike01.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+}
+
+@media (min-width:480px) {
+  .c0 {
+    min-height: 100px;
+  }
+}
+
+@media (min-width:480px) {
+  .c3 {
+    padding: 0 15px;
+  }
+}
+
+@media (max-width:479px) {
+  .c4 {
+    padding-bottom: 5px;
+  }
+}
+
+@media (min-width:480px) {
+  .c4 {
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width:479px) {
+  .c5 {
+    padding-bottom: 5px;
+  }
+}
+
+@media (min-width:480px) {
+  .c5 {
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width:479px) {
+  .c1 {
+    display: inherit;
+    padding-bottom: 10px;
+  }
+}
+
+@media (min-width:480px) {
+  .c1 {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    min-height: 100px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.05);
+    background: rgba(0,0,0,0.02);
+  }
+}
+
+@media (max-width:479px) {
+  .c2 {
+    padding-top: 100%;
+    width: 100%;
+  }
+}
+
+@media (min-width:480px) {
+  .c2 {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+<div
+  className="c0"
+>
+  <div
+    className="c1"
+  >
+    <div
+      className="c2"
+    />
+  </div>
+  <div
+    className="c3"
+    data-test-id="inicidents-list__item"
+  >
+    <div
+      className="c4"
+    >
+      Stolen 2017 State Bicycle Co. Matte Black 5 - 59 Core Line: Fixed Gear(black)
+    </div>
+    <div
+      className="c5"
+    >
+      Stolen during nighttime from the house's closed yard.
+    </div>
+    <div
+      className=""
+    >
+      Thu Oct 24 2019 - Berlin, 10963, DE
+    </div>
+  </div>
+</div>
+`;

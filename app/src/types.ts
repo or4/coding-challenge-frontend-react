@@ -11,11 +11,13 @@ export interface IIncident {
     title?: string;
     description?: string;
     address?: string;
-    media?: {
-        imageUrl?: string;
-        imageUrlThumb?: string;
-    };
+    media?: IMedia;
     occurredAt?: number;
+}
+
+export interface IMedia {
+    imageUrl?: string;
+    imageUrlThumb?: string;
 }
 
 export interface IIncidentDb {

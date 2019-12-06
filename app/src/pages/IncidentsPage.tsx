@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
-import { Incident } from 'components/Incident/Incident';
+import { Incident } from 'components/Incidents/Incident';
 import { AppState } from 'core/reducers';
 import { IIncident } from 'types';
 

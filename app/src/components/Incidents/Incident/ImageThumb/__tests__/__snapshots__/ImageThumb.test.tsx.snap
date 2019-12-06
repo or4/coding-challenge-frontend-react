@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Image should pass prop with background image 1`] = `
+.c0 {
+  background-image: url(https://test-image-url.com);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    padding-top: 100%;
+    width: 100%;
+  }
+}
+
+@media (min-width:480px) {
+  .c0 {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`ImageThumb should render correct with url 1`] = `
+.c1 {
+  background-image: url(https://test-image-url.com);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    display: inherit;
+    padding-bottom: 10px;
+  }
+}
+
+@media (min-width:480px) {
+  .c0 {
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    min-height: 100px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.05);
+    background: rgba(0,0,0,0.02);
+  }
+}
+
+@media (max-width:479px) {
+  .c1 {
+    padding-top: 100%;
+    width: 100%;
+  }
+}
+
+@media (min-width:480px) {
+  .c1 {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+<div
+  className="c0"
+>
+  <div
+    className="c1"
+  />
+</div>
+`;
+
+exports[`Preview should have background image 1`] = `
+.c0 {
+  background-image: url(preview.svg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 55px;
+  height: 32px;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    display: none;
+  }
+}
+
+<div
+  className="c0"
+/>
+`;
