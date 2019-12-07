@@ -15,7 +15,7 @@ describe('Incident', () => {
         incident = getFakeIncidents(1)[0];
     });
 
-    it('should return component', () => {
+    it('should correct render component', () => {
         const tree = renderer.create(<Incident {...incident} />).toJSON();
 
         expect(tree).toMatchSnapshot();
