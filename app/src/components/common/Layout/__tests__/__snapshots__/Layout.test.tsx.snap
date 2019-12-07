@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Layout should return component 1`] = `
+exports[`Layout should correct render 1`] = `
 .c0 {
   margin: 0 auto 15px;
 }

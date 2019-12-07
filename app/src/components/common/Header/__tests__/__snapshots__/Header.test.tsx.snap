@@ -1,0 +1,236 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header Container should correct render 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    height: 60px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (min-width:480px) and (max-width:991px) {
+  .c0 {
+    height: 100px;
+  }
+}
+
+@media (min-width:992px) {
+  .c0 {
+    height: 140px;
+  }
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Header Description should correct render 1`] = `
+.c0 {
+  font-weight: 600;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    font-size: 14px;
+  }
+}
+
+@media (min-width:480px) and (max-width:991px) {
+  .c0 {
+    font-size: 16px;
+  }
+}
+
+@media (min-width:992px) {
+  .c0 {
+    font-size: 32px;
+  }
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Header Logo should correct render 1`] = `
+.c0 {
+  width: 64px;
+  height: 64px;
+}
+
+@media (min-width:480px) {
+  .c0 {
+    padding: 0 18px;
+  }
+}
+
+<img
+  className="c0"
+/>
+`;
+
+exports[`Header TextWrapper should correct render 1`] = `
+.c0 {
+  padding-left: 15px;
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Header Title should correct render 1`] = `
+.c0 {
+  font-weight: 600;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    font-size: 18px;
+  }
+}
+
+@media (min-width:480px) and (max-width:991px) {
+  .c0 {
+    font-size: 32px;
+  }
+}
+
+@media (min-width:992px) {
+  .c0 {
+    font-size: 48px;
+  }
+}
+
+<div
+  className="c0"
+/>
+`;
+
+exports[`Header should correct render 1`] = `
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.c1 {
+  width: 64px;
+  height: 64px;
+}
+
+.c2 {
+  padding-left: 15px;
+}
+
+.c3 {
+  font-weight: 600;
+}
+
+.c4 {
+  font-weight: 600;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    height: 60px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (min-width:480px) and (max-width:991px) {
+  .c0 {
+    height: 100px;
+  }
+}
+
+@media (min-width:992px) {
+  .c0 {
+    height: 140px;
+  }
+}
+
+@media (min-width:480px) {
+  .c1 {
+    padding: 0 18px;
+  }
+}
+
+@media (max-width:479px) {
+  .c3 {
+    font-size: 18px;
+  }
+}
+
+@media (min-width:480px) and (max-width:991px) {
+  .c3 {
+    font-size: 32px;
+  }
+}
+
+@media (min-width:992px) {
+  .c3 {
+    font-size: 48px;
+  }
+}
+
+@media (max-width:479px) {
+  .c4 {
+    font-size: 14px;
+  }
+}
+
+@media (min-width:480px) and (max-width:991px) {
+  .c4 {
+    font-size: 16px;
+  }
+}
+
+@media (min-width:992px) {
+  .c4 {
+    font-size: 32px;
+  }
+}
+
+<div
+  className="c0"
+>
+  <img
+    className="c1"
+    src="logo.png"
+  />
+  <div
+    className="c2"
+  >
+    <div
+      className="c3"
+    >
+      Police Department of Berlin
+    </div>
+    <div
+      className="c4"
+    >
+      Stolen bikes
+    </div>
+  </div>
+</div>
+`;

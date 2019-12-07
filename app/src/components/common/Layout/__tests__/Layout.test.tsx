@@ -6,7 +6,7 @@ import 'jest-styled-components';
 import { Layout } from '..';
 
 describe('Layout', () => {
-    it('should return component', () => {
+    it('should correct render', () => {
         const tree = renderer.create(<Layout />).toJSON();
 
         expect(tree).toMatchSnapshot();
