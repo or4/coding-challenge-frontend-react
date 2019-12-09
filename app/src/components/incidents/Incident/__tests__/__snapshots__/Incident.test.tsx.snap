@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Incident should return component 1`] = `
+exports[`Incident should correct render 1`] = `
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -130,6 +130,7 @@ exports[`Incident should return component 1`] = `
 
 <div
   className="c0"
+  data-test-id="inicidents-list__item"
 >
   <div
     className="c1"
@@ -140,7 +141,6 @@ exports[`Incident should return component 1`] = `
   </div>
   <div
     className="c3"
-    data-test-id="inicidents-list__item"
   >
     <div
       className="c4"

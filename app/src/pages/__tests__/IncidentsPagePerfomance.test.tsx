@@ -44,7 +44,10 @@ describe('IncidentsPage', () => {
         let request = moxios.requests.mostRecent();
         await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
-        expect(renderSpy).toHaveBeenCalledTimes(2);
+        // 1 - empty incidents
+        // 2 - loading..
+        // 3 - actual incidents list
+        expect(renderSpy).toHaveBeenCalledTimes(3);
 
         renderSpy.mockClear();
 

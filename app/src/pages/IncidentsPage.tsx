@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
+import { Loading } from 'components/common/Loading';
 import { Incident } from 'components/incidents/Incident';
 import { AppState } from 'core/reducers';
 import { IIncident } from 'types';
@@ -10,10 +11,15 @@ export const Container = styled.div``;
 
 interface DispatchProps {
     incidents: IIncident[];
+    requesting?: boolean;
 }
 
 export class IncidentsPage extends React.Component<DispatchProps> {
     public shouldComponentUpdate(nextProps: DispatchProps) {
+        if (nextProps && nextProps.requesting !== this.props.requesting) {
+            return true;
+        }
+
         if (nextProps && nextProps.incidents.length === 0 && this.props.incidents.length === 0) {
             return false;
         }
@@ -26,6 +32,10 @@ export class IncidentsPage extends React.Component<DispatchProps> {
     }
 
     public render() {
+        if (this.props.requesting) {
+            return <Loading />;
+        }
+
         return (
             <Container data-test-id="inicidents-list">
                 {(this.props.incidents || []).map((incident, index) => (
@@ -38,6 +48,7 @@ export class IncidentsPage extends React.Component<DispatchProps> {
 
 const mapStateToProps = (state: AppState) => ({
     incidents: state.incidents.incidents || [],
+    requesting: state.incidents.requesting,
 });
 
 export const ConnectedIncidentsPage = connect(mapStateToProps)(IncidentsPage);

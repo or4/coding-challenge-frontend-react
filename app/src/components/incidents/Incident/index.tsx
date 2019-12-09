@@ -7,9 +7,9 @@ import { ImageThumb } from './ImageThumb';
 type IProps = IIncident;
 
 export const Incident: React.FC<IProps> = (props: IProps) => (
-    <Container>
+    <Container data-test-id="inicidents-list__item">
         <ImageThumb {...props.media} />
-        <TextContainer data-test-id="inicidents-list__item">
+        <TextContainer>
             <IncidentTitle>{props.title}</IncidentTitle>
             {props.description && <IncidentDescription>{props.description}</IncidentDescription>}
             <IncidentDetails>{getDetails(props)}</IncidentDetails>

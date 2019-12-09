@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loading should correct render 1`] = `
+.c0 {
+  margin-top: 40px;
+}
+
+<div
+  className="c0"
+  data-test-id="loading"
+>
+  Loading ...
+</div>
+`;

@@ -24,8 +24,7 @@ describe('App', () => {
             ReactDOM.render(<AppWithStore />, root);
         });
 
-        const app = root && root.getElementsByClassName('app')[0];
-
-        expect(Boolean(app)).toBe(true);
+        const container = root && root.querySelectorAll('[data-test-id="layout"]');
+        expect(container).toHaveLength(1);
     });
 });
