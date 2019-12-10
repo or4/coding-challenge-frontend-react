@@ -6,12 +6,14 @@ import { Loading } from 'components/common/Loading';
 import { Incident } from 'components/incidents/Incident';
 import { AppState } from 'core/reducers';
 import { IIncident } from 'types';
+import { Error } from 'components/common/Error';
 
 export const Container = styled.div``;
 
 interface DispatchProps {
     incidents: IIncident[];
     requesting?: boolean;
+    error?: object;
 }
 
 export class IncidentsPage extends React.Component<DispatchProps> {
@@ -32,6 +34,10 @@ export class IncidentsPage extends React.Component<DispatchProps> {
     }
 
     public render() {
+        if (this.props.error) {
+            return <Error />;
+        }
+
         if (this.props.requesting) {
             return <Loading />;
         }
@@ -46,9 +52,10 @@ export class IncidentsPage extends React.Component<DispatchProps> {
     }
 }
 
-const mapStateToProps = (state: AppState) => ({
-    incidents: state.incidents.incidents || [],
-    requesting: state.incidents.requesting,
+const mapStateToProps = ({ incidents: { incidents = [], requesting, error } }: AppState) => ({
+    incidents,
+    requesting,
+    error,
 });
 
 export const ConnectedIncidentsPage = connect(mapStateToProps)(IncidentsPage);

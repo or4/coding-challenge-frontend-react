@@ -4,6 +4,7 @@ import { IncidentsActionType, IncidentsActions } from './actions';
 export interface IIncidentsState {
     requesting?: boolean;
     incidents?: IIncident[];
+    error?: object;
 }
 
 export const initialState: IIncidentsState = {};
