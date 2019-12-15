@@ -1,6 +1,7 @@
 import { create } from 'apisauce';
 
 import { toSnakeCase, toCamelCase } from './utils/transformProps';
+import { isE2E } from 'utils/e2e';
 
 const API_END_POINT = 'https://bikewise.org:443/api/v2';
 
@@ -15,6 +16,10 @@ export const config = {
 };
 
 export const api = create(config);
+
+if (isE2E() && typeof window !== 'undefined') {
+    window.api = api;
+}
 
 // @ts-ignore
 export const requestInterceptor = function(request) {

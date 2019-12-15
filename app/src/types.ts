@@ -1,3 +1,5 @@
+import { ApisauceInstance } from 'apisauce';
+
 export type IncidentType = 'crash' | 'hazard' | 'theft' | 'unconfirmed' | 'infrastructure_issue' | 'chop_shop';
 
 export interface IIncidentRequestOptions {
@@ -42,4 +44,11 @@ export interface IIncidentDb {
     typeProperties?: string;
     updatedAt?: number;
     url?: string;
+}
+
+declare global {
+    interface Window {
+        api?: ApisauceInstance;
+        mockResolved?: boolean;
+    }
 }

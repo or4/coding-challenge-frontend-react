@@ -3,7 +3,7 @@ import logo from './assets/logo.png';
 import { Container, Logo, TextWrapper, Title, Description } from './style';
 
 export const Header = () => (
-    <Container>
+    <Container data-test-id="header">
         <Logo src={logo} />
         <TextWrapper>
             <Title>Police Department of Berlin</Title>

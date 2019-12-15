@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
+const { expect } = require('chai');
 
-describe('App', function() {
+describe('General', function() {
     it('should load with the right title', async function() {
         const test = this.browser.url('/');
 

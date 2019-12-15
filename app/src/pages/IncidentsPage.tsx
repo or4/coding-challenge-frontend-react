@@ -43,7 +43,7 @@ export class IncidentsPage extends React.Component<DispatchProps> {
         }
 
         return (
-            <Container data-test-id="inicidents-list">
+            <Container data-test-id="incidents-list">
                 {(this.props.incidents || []).map((incident, index) => (
                     <Incident key={index} {...incident} />
                 ))}
