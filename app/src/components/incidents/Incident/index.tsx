@@ -7,11 +7,13 @@ import { ImageThumb } from './ImageThumb';
 type IProps = IIncident;
 
 export const Incident: React.FC<IProps> = (props: IProps) => (
-    <Container data-test-id="inicidents-list__item">
+    <Container data-test-id="incident">
         <ImageThumb {...props.media} />
         <TextContainer>
-            <IncidentTitle>{props.title}</IncidentTitle>
-            {props.description && <IncidentDescription>{props.description}</IncidentDescription>}
+            <IncidentTitle data-test-id="incident__title">{props.title}</IncidentTitle>
+            {props.description && (
+                <IncidentDescription data-test-id="incident__description">{props.description}</IncidentDescription>
+            )}
             <IncidentDetails>{getDetails(props)}</IncidentDetails>
         </TextContainer>
     </Container>
@@ -19,10 +21,16 @@ export const Incident: React.FC<IProps> = (props: IProps) => (
 
 function getDetails({ occurredAt, address }: IProps) {
     const date = occurredAt && dateToString(occurredAt);
+    const dateComponent = <span data-test-id="incident__date">{date}</span>;
+    const addressComponent = <span data-test-id="incident__address">{address}</span>;
 
-    if (date && address) {
-        return `${date} - ${address}`;
+    if (dateComponent && addressComponent) {
+        return (
+            <>
+                {dateComponent} – {addressComponent}
+            </>
+        );
     }
 
-    return date ? date : address;
+    return dateComponent ? dateComponent : addressComponent;
 }

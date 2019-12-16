@@ -130,7 +130,7 @@ exports[`Incident should correct render 1`] = `
 
 <div
   className="c0"
-  data-test-id="inicidents-list__item"
+  data-test-id="incident"
 >
   <div
     className="c1"

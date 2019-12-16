@@ -58,7 +58,7 @@ describe('IncidentsPage', () => {
             let request = moxios.requests.mostRecent();
             await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
-            const container = root.querySelectorAll('[data-test-id="inicidents-list__item"]');
+            const container = root.querySelectorAll('[data-test-id="incident"]');
             expect(container).toHaveLength(3);
 
             jest.resetAllMocks();
@@ -80,7 +80,7 @@ describe('IncidentsPage', () => {
             let request = moxios.requests.mostRecent();
             await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
-            const itemsContainer = root.querySelectorAll('[data-test-id="inicidents-list__item"]');
+            const itemsContainer = root.querySelectorAll('[data-test-id="incident"]');
             expect(itemsContainer).toHaveLength(3);
 
             jest.resetAllMocks();

@@ -2,7 +2,6 @@ import styled, { StyledComponent } from 'styled-components';
 import { media } from 'ui/utils';
 
 import prevewSvg from './assets/preview.svg';
-import { IProps } from '.';
 
 interface IContainerProps {
     isPreview: boolean;
@@ -31,7 +30,6 @@ export const Container: StyledComponent<'div', any, IContainerProps, never> = st
 `;
 
 export const Image = styled.div`
-    background-image: url(${(props: IProps) => props.imageUrl});
     background-repeat: no-repeat;
     background-size: cover;
 

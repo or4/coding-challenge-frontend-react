@@ -13,6 +13,10 @@ module.exports = {
 			files: 'e2e-tests/**/*@common.hermione.js',
 			browsers: ['chrome', 'firefox', 'iphone8', 'ipad']
 		},
+        behaviour: {
+			files: 'e2e-tests/**/*@behaviour.hermione.js',
+			browsers: ['chrome']
+		},
         desktop: {
 			files: 'e2e-tests/**/*@desktop.hermione.js',
 			browsers: ['chrome', 'firefox']
