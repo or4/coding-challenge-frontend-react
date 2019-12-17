@@ -7,6 +7,7 @@ import { Incident } from 'components/incidents/Incident';
 import { AppState } from 'core/reducers';
 import { IIncident } from 'types';
 import { Error } from 'components/common/Error';
+import { EmptyResults } from 'components/incidents/EmptyResults';
 
 export const Container = styled.div``;
 
@@ -42,11 +43,15 @@ export class IncidentsPage extends React.Component<DispatchProps> {
             return <Loading />;
         }
 
+        const incidents = this.props.incidents || [];
+
         return (
             <Container data-test-id="incidents-list">
-                {(this.props.incidents || []).map((incident, index) => (
-                    <Incident key={index} {...incident} />
-                ))}
+                {incidents.length === 0 ? (
+                    <EmptyResults />
+                ) : (
+                    incidents.map((incident, index) => <Incident key={index} {...incident} />)
+                )}
             </Container>
         );
     }

@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyResults should correct render 1`] = `
+<div
+  className=""
+  data-test-id="incidents-list__empty"
+>
+  No results
+</div>
+`;

@@ -1,5 +1,5 @@
 function mockIncidents() {
-    const fakeIncidents = [0, 1, 2].reduce((acc, id) => {
+    const fakeIncidents = Array.from(Array(3).keys()).reduce((acc, id) => {
         acc[id] = {
             id,
             address: 'Berlin, 10963, DE',
@@ -60,7 +60,26 @@ function mockIncidentsWithError() {
     window.mockResolved = true;
 }
 
+function mockEmptyIncidents() {
+    window.api.get = function(...args) {
+        const [url] = args;
+
+        if (url === '/incidents') {
+            return new Promise(function(resolve) {
+                setTimeout(function() {
+                    resolve({ status: 200, data: { incidents: [] } });
+                }, 2000);
+            });
+        }
+
+        return window.api.get(...args);
+    };
+
+    window.mockResolved = true;
+}
+
 module.exports = {
     mockIncidents,
     mockIncidentsWithError,
+    mockEmptyIncidents,
 };

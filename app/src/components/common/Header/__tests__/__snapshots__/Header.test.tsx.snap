@@ -213,6 +213,7 @@ exports[`Header should correct render 1`] = `
 
 <div
   className="c0"
+  data-test-id="header"
 >
   <img
     className="c1"

@@ -40,7 +40,7 @@ describe('IncidentsPage', () => {
             act(() => {
                 ReactDOM.render(<AppWithStore />, root);
 
-                const container = root.querySelectorAll('[data-test-id="inicidents-list"]');
+                const container = root.querySelectorAll('[data-test-id="incidents-list"]');
                 expect(container.length === 1).toBe(true);
                 jest.resetAllMocks();
             });

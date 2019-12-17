@@ -119,6 +119,7 @@ exports[`Layout should correct render 1`] = `
 >
   <div
     className="c1"
+    data-test-id="header"
   >
     <img
       className="c2"

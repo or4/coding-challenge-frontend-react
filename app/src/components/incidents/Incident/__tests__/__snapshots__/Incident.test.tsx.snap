@@ -32,7 +32,6 @@ exports[`Incident should correct render 1`] = `
 }
 
 .c2 {
-  background-image: url(https://files.bikeindex.org/uploads/Pu/196548/small_Bike01.png);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -137,25 +136,49 @@ exports[`Incident should correct render 1`] = `
   >
     <div
       className="c2"
-    />
+      data-test-id="incident-image__image"
+      style={
+        Object {
+          "backgroundImage": "url(https://files.bikeindex.org/uploads/Pu/196548/small_Bike01.png)",
+        }
+      }
+    >
+      <img
+        alt="incident"
+        height="0"
+        src="https://files.bikeindex.org/uploads/Pu/196548/small_Bike01.png"
+      />
+    </div>
   </div>
   <div
     className="c3"
   >
     <div
       className="c4"
+      data-test-id="incident__title"
     >
       Stolen 2017 State Bicycle Co. Matte Black 5 - 59 Core Line: Fixed Gear(black)
     </div>
     <div
       className="c5"
+      data-test-id="incident__description"
     >
       Stolen during nighttime from the house's closed yard.
     </div>
     <div
       className=""
     >
-      Thu Oct 24 2019 - Berlin, 10963, DE
+      <span
+        data-test-id="incident__date"
+      >
+        Thu Oct 24 2019
+      </span>
+       – 
+      <span
+        data-test-id="incident__address"
+      >
+        Berlin, 10963, DE
+      </span>
     </div>
   </div>
 </div>

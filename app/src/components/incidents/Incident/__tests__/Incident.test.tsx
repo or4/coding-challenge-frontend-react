@@ -45,7 +45,7 @@ describe('Incident', () => {
 
         expect(description.exists()).toBeTruthy();
         expect(description).toHaveLength(1);
-        expect(description.text()).toBe('Thu Oct 24 2019 - Berlin, 10963, DE');
+        expect(description.text()).toBe('Thu Oct 24 2019 – Berlin, 10963, DE');
     });
 
     it('should no description', () => {

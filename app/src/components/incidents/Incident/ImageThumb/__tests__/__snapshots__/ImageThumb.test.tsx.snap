@@ -2,7 +2,6 @@
 
 exports[`Image should pass prop with background image 1`] = `
 .c0 {
-  background-image: url(https://test-image-url.com);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -28,7 +27,6 @@ exports[`Image should pass prop with background image 1`] = `
 
 exports[`ImageThumb should render correct with url 1`] = `
 .c1 {
-  background-image: url(https://test-image-url.com);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -84,7 +82,19 @@ exports[`ImageThumb should render correct with url 1`] = `
 >
   <div
     className="c1"
-  />
+    data-test-id="incident-image__image"
+    style={
+      Object {
+        "backgroundImage": "url(https://test-image-url.com)",
+      }
+    }
+  >
+    <img
+      alt="incident"
+      height="0"
+      src="https://test-image-url.com"
+    />
+  </div>
 </div>
 `;
 

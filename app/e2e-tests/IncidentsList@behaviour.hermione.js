@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { mockIncidents, mockIncidentsWithError } = require('./helpers/mockIncidents');
+const { mockIncidents, mockIncidentsWithError, mockEmptyIncidents } = require('./helpers/mockIncidents');
 const timeout = 5000;
 
 describe('Behaviour. Incidents list', () => {
@@ -234,5 +234,29 @@ describe('Behaviour. Common cases', () => {
                 });
         });
     });
-    describe('I want to see an empty state if there are no results.', () => {});
+
+    describe('I want to see an empty state if there are no results.', () => {
+        it('should render empty state', function() {
+            return this.browser
+                .url('/')
+                .execute(mockEmptyIncidents)
+                .waitForVisible('[data-test-id="incidents-list__empty"]', timeout)
+                .execute(() => {
+                    const elements = document.body.querySelectorAll('[data-test-id="incidents-list__empty"]');
+                    const emptyText = elements.length > 0 && elements[0].textContent;
+
+                    return {
+                        emptyCount: elements.length,
+                        emptyText,
+                    };
+                })
+                .then(result => {
+                    const { value } = result;
+                    const { emptyCount, emptyText } = value;
+
+                    assert.isOk(emptyCount === 1, 'It should be one empty component');
+                    assert.isOk(emptyText === 'No results', 'It should match text value');
+                });
+        });
+    });
 });
