@@ -18,7 +18,7 @@ export const config = {
 export const api = create(config);
 
 if (isE2E() && typeof window !== 'undefined') {
-    window.api = api;
+    window.e2e = { api, responses: [] };
 }
 
 // @ts-ignore

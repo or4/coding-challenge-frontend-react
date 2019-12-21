@@ -3,7 +3,12 @@ import { promisify } from 'util';
 import { IIncidentRequestOptions, IIncident } from 'types';
 
 import { incidentsReducer, IIncidentsState } from '../reducers';
-import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
+import {
+    IncidentsRequest,
+    IncidentsRequestSuccess,
+    IncidentsRequestFail,
+    defaultIncidentRequestOptions,
+} from '../actions';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Incidents reducer', () => {
@@ -34,20 +39,16 @@ describe('Incidents reducer', () => {
 
     describe('IncidentsRequest', () => {
         it('should return right state with empty options', () => {
-            const options: IIncidentRequestOptions = {};
+            const options: IIncidentRequestOptions = {
+                page: 1,
+            };
             expect(incidentsReducer(state, new IncidentsRequest(options))).toEqual({
                 requesting: true,
             });
         });
 
         it('should return right state action with options', () => {
-            const options: IIncidentRequestOptions = {
-                incidentType: 'theft',
-                proximity: 'Berlin',
-                proximitySquare: 100,
-            };
-
-            expect(incidentsReducer(state, new IncidentsRequest(options))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequest(defaultIncidentRequestOptions))).toEqual({
                 requesting: true,
             });
         });

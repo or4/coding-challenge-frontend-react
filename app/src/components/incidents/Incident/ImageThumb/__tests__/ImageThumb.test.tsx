@@ -31,6 +31,12 @@ describe('ImageThumb', () => {
 
         expect(wrapper.find(Container)).toHaveLength(1);
     });
+
+    it('should have alt', () => {
+        const wrapper = shallow(<ImageThumb imageUrlThumb={url} />);
+
+        expect(wrapper.find('img').prop('alt')).toBe('incident');
+    });
 });
 
 describe('Preview', () => {
@@ -43,7 +49,7 @@ describe('Preview', () => {
 
 describe('Image', () => {
     it('should pass prop with background image', () => {
-        const tree = renderer.create(<Image imageUrl={url} />).toJSON();
+        const tree = renderer.create(<Image />).toJSON();
 
         expect(tree).toMatchSnapshot();
     });

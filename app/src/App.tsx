@@ -3,13 +3,12 @@ import { Provider } from 'react-redux';
 
 import { Layout } from 'components/common/Layout';
 import { store } from 'core/store';
-import { IncidentsRequest } from 'core/incidents/actions';
+import { IncidentsRequest, defaultIncidentRequestOptions } from 'core/incidents/actions';
 import { ConnectedIncidentsPage } from 'pages/IncidentsPage';
 
 export const AppWithStore: React.FC = () => {
     useEffect(() => {
-        // @ts-ignore
-        store.dispatch(new IncidentsRequest({ incidentType: 'theft', proximity: 'Berlin', proximitySquare: 100 }));
+        store.dispatch(new IncidentsRequest(defaultIncidentRequestOptions));
     });
 
     return (

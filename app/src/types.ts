@@ -6,6 +6,8 @@ export interface IIncidentRequestOptions {
     incidentType?: IncidentType; // Only incidents of specific type
     proximity?: string; // Center of location for proximity search
     proximitySquare?: number; // Size of the proximity search
+    page: number; // Page of results to fetch.
+    perPage?: number; // Number of results to return per page.
 }
 
 export interface IIncident {
@@ -48,7 +50,10 @@ export interface IIncidentDb {
 
 declare global {
     interface Window {
-        api?: ApisauceInstance;
+        e2e: {
+            api?: ApisauceInstance;
+            responses: object[];
+        };
         mockResolved?: boolean;
     }
 }

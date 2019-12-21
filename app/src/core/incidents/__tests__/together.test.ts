@@ -11,7 +11,12 @@ import { applyActions } from 'core/utils/applyActions';
 import { moxiosWait } from 'core/utils/moxiosWait';
 import { IIncident, IIncidentRequestOptions } from 'types';
 
-import { IncidentsRequestSuccess, IncidentsRequest, IncidentsRequestFail } from '../actions';
+import {
+    IncidentsRequestSuccess,
+    IncidentsRequest,
+    IncidentsRequestFail,
+    defaultIncidentRequestOptions,
+} from '../actions';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 import { transform } from '../sagas';
 
@@ -41,7 +46,7 @@ describe('Incidents redux tests', () => {
         it('should work correctly with empty incidents and empty options', async done => {
             const incidents: IIncident[] = [];
 
-            const options: IIncidentRequestOptions = {};
+            const options: IIncidentRequestOptions = { page: 1 };
             store.dispatch(new IncidentsRequest(options));
 
             await moxiosWait();
@@ -67,12 +72,7 @@ describe('Incidents redux tests', () => {
         });
 
         it('should work correctly with a few incidents', async done => {
-            const options: IIncidentRequestOptions = {
-                incidentType: 'theft',
-                proximity: 'Berlin',
-                proximitySquare: 100,
-            };
-            const action = new IncidentsRequest(options);
+            const action = new IncidentsRequest(defaultIncidentRequestOptions);
             const incidents: IIncident[] = getFakeIncidents(3);
 
             store.dispatch(action);
@@ -85,7 +85,10 @@ describe('Incidents redux tests', () => {
             const actions = store.getActions();
             const incidentsExpected = transform(incidents);
 
-            expect(actions).toEqual([new IncidentsRequest(options), new IncidentsRequestSuccess(incidentsExpected)]);
+            expect(actions).toEqual([
+                new IncidentsRequest(defaultIncidentRequestOptions),
+                new IncidentsRequestSuccess(incidentsExpected),
+            ]);
 
             const localState = applyActions(reducers, state, actions);
 
@@ -102,6 +105,7 @@ describe('Incidents redux tests', () => {
         it('should not work with error', async done => {
             const options: IIncidentRequestOptions = {
                 proximity: 'unexpected_proximity',
+                page: 1,
             };
             const action = new IncidentsRequest(options);
             store.dispatch(action);

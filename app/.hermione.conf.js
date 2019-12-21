@@ -9,13 +9,21 @@ module.exports = {
     screenshotsDir: test => path.join(path.dirname(test.file), 'screens', test.id(), test.browserId),
 
     sets: {
+        behavior: {
+			files: 'e2e-tests/**/*@behavior.hermione.js',
+			browsers: ['chrome']
+		},
+        functional: {
+			files: 'e2e-tests/**/*@functional.hermione.js',
+			browsers: ['chrome']
+		},
+        integration: {
+			files: 'e2e-tests/**/*@integration.hermione.js',
+			browsers: ['chrome']
+		},
         common: {
 			files: 'e2e-tests/**/*@common.hermione.js',
 			browsers: ['chrome', 'firefox', 'iphone8', 'ipad']
-		},
-        behaviour: {
-			files: 'e2e-tests/**/*@behaviour.hermione.js',
-			browsers: ['chrome']
 		},
         desktop: {
 			files: 'e2e-tests/**/*@desktop.hermione.js',

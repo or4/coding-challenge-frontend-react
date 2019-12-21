@@ -1,16 +1,23 @@
 import createHttpError from 'http-errors';
 import { IIncidentRequestOptions } from 'types';
 
-import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
+import {
+    IncidentsRequest,
+    IncidentsRequestSuccess,
+    IncidentsRequestFail,
+    defaultIncidentRequestOptions,
+} from '../actions';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Check Incident actions', () => {
     describe('IncidentsRequest', () => {
         it('should create action with empty options', () => {
-            const options: IIncidentRequestOptions = {};
+            const options: IIncidentRequestOptions = {
+                page: 1,
+            };
 
             expect(new IncidentsRequest(options)).toEqual({
-                options: {},
+                options,
                 type: 'Incidents/incidents request',
             });
         });
@@ -20,6 +27,7 @@ describe('Check Incident actions', () => {
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 100,
+                page: 1,
             };
 
             expect(new IncidentsRequest(options)).toEqual({ type: 'Incidents/incidents request', options });
@@ -28,6 +36,7 @@ describe('Check Incident actions', () => {
         it('should create action with incidentType option', () => {
             const options: IIncidentRequestOptions = {
                 incidentType: 'theft',
+                page: 1,
             };
 
             expect(new IncidentsRequest(options)).toEqual({ type: 'Incidents/incidents request', options });
@@ -37,9 +46,22 @@ describe('Check Incident actions', () => {
             const options: IIncidentRequestOptions = {
                 proximity: 'Berlin',
                 proximitySquare: 100,
+                page: 1,
             };
 
             expect(new IncidentsRequest(options)).toEqual({ type: 'Incidents/incidents request', options });
+        });
+    });
+
+    describe('defaultIncidentRequestOptions', () => {
+        it('should match object', () => {
+            expect(defaultIncidentRequestOptions).toEqual({
+                incidentType: 'theft',
+                proximity: 'Berlin',
+                proximitySquare: 50,
+                perPage: 10,
+                page: 1,
+            });
         });
     });
 

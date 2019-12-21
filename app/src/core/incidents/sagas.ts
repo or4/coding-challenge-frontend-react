@@ -3,6 +3,7 @@ import { api } from 'core/api';
 
 import { IncidentsActionType, IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from './actions';
 import { IIncident, IIncidentDb } from 'types';
+import { isE2E } from 'utils/e2e';
 
 export function* incidents({ options }: IncidentsRequest) {
     const result = yield call(api.get, '/incidents', options);
@@ -11,6 +12,10 @@ export function* incidents({ options }: IncidentsRequest) {
     if (status !== 200) {
         // response like { data: {error: "incident_type does not have a valid value"}, status: 400 }
         return yield put(new IncidentsRequestFail({ status, data }));
+    }
+
+    if (isE2E()) {
+        window.e2e.responses.push(data);
     }
 
     yield put(new IncidentsRequestSuccess(transform(data.incidents)));

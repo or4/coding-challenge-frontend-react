@@ -16,6 +16,14 @@ export class IncidentsRequest implements Action {
     }
 }
 
+export const defaultIncidentRequestOptions: IIncidentRequestOptions = {
+    incidentType: 'theft',
+    proximity: 'Berlin',
+    proximitySquare: 50,
+    perPage: 10,
+    page: 1,
+};
+
 export class IncidentsRequestSuccess implements Action {
     public readonly type = IncidentsActionType.IncidentsRequestSuccess;
     public incidents: IIncident[];
