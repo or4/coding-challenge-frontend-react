@@ -1,12 +1,8 @@
 import createHttpError from 'http-errors';
-import { IIncidentRequestOptions } from 'types';
+import { IIncidentRequestOptions, IIncident } from 'types';
 
-import {
-    IncidentsRequest,
-    IncidentsRequestSuccess,
-    IncidentsRequestFail,
-    defaultIncidentRequestOptions,
-} from '../actions';
+import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
+import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Check Incident actions', () => {
@@ -53,9 +49,9 @@ describe('Check Incident actions', () => {
         });
     });
 
-    describe('defaultIncidentRequestOptions', () => {
+    describe('defaultOptions', () => {
         it('should match object', () => {
-            expect(defaultIncidentRequestOptions).toEqual({
+            expect(defaultOptions).toEqual({
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 50,
@@ -67,27 +63,69 @@ describe('Check Incident actions', () => {
 
     describe('IncidentsRequestSuccess', () => {
         it('should return action with empty incidents list', () => {
-            expect(new IncidentsRequestSuccess([])).toEqual({
+            const page = 1;
+            const incidents: IIncident[] = [];
+
+            expect(new IncidentsRequestSuccess(incidents)).toEqual({
                 type: 'Incidents/incidents request success',
-                incidents: [],
+                incidents,
+                options: { page },
             });
         });
 
         it('should return action with one incident', () => {
+            const page = 1;
             const incidents = getFakeIncidents(1);
 
             expect(new IncidentsRequestSuccess(incidents)).toEqual({
                 type: 'Incidents/incidents request success',
                 incidents,
+                options: { page },
             });
         });
 
         it('should return action with three incidents', () => {
+            const page = 1;
             const incidents = getFakeIncidents(3);
 
             expect(new IncidentsRequestSuccess(incidents)).toEqual({
                 type: 'Incidents/incidents request success',
                 incidents,
+                options: { page },
+            });
+        });
+
+        it('should return correct action where current page is not defined', () => {
+            const page = 1;
+            const incidents: IIncident[] = [];
+
+            expect(new IncidentsRequestSuccess(incidents)).toEqual({
+                type: 'Incidents/incidents request success',
+                incidents,
+                options: { page },
+            });
+        });
+
+        it('should return correct action where current page is 3', () => {
+            const page = 3;
+            const incidents: IIncident[] = [];
+
+            expect(new IncidentsRequestSuccess(incidents, { page })).toEqual({
+                type: 'Incidents/incidents request success',
+                incidents,
+                options: { page },
+            });
+        });
+
+        it('should create action with perPage value', () => {
+            const page = 1;
+            const perPage = MAX_INCIDENTS_COUNT;
+            const incidents: IIncident[] = [];
+
+            expect(new IncidentsRequestSuccess(incidents, { page, perPage })).toEqual({
+                type: 'Incidents/incidents request success',
+                incidents,
+                options: { page, perPage },
             });
         });
     });

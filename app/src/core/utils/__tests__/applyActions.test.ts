@@ -4,10 +4,10 @@ import { applyActions } from '../applyActions';
 
 describe('Check applyActions', () => {
     let actions: Action[];
-    let initialState: State;
-    let reducer: Reducer<State, Action>;
+    let initialState: IState;
+    let reducer: Reducer<IState, Action>;
 
-    interface State {
+    interface IState {
         action1?: string;
         action2?: string;
         initialValue?: string;
@@ -18,7 +18,7 @@ describe('Check applyActions', () => {
 
         initialState = {};
 
-        reducer = (state: State = initialState, action: Action) => {
+        reducer = (state: IState = initialState, action: Action) => {
             if (action.type === 'Type Action 1') {
                 return { ...state, action1: 'done' };
             }
@@ -60,7 +60,7 @@ describe('Check applyActions', () => {
 
     it('should return undefined when app inital state is undefined', () => {
         // @ts-ignore
-        const initialState: State = undefined;
+        const initialState: IState = undefined;
         const state = applyActions(reducer, initialState, actions);
 
         expect(state).toEqual(undefined);

@@ -1,34 +1,54 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Dispatch, Action } from 'redux';
 import styled from 'styled-components';
 
 import { Loading } from 'components/common/Loading';
 import { Incident } from 'components/incidents/Incident';
-import { AppState } from 'core/reducers';
-import { IIncident } from 'types';
 import { Error } from 'components/common/Error';
 import { EmptyResults } from 'components/incidents/EmptyResults';
+import { Pagination } from 'components/incidents/Pagination';
+import { selectTotalPages } from 'core/incidents/reducers';
+import { IAppState } from 'core/reducers';
+import { IIncident } from 'types';
+import { IncidentsRequest } from 'core/incidents/actions';
+import { defaultOptions } from 'core/incidents/contstants';
 
 export const Container = styled.div``;
 
-interface DispatchProps {
+interface IDispatchProps {
+    changePage: (page: number) => void;
+}
+
+interface IProps {
     incidents: IIncident[];
     requesting?: boolean;
+    currentPage: number;
+    totalPages: number;
     error?: object;
 }
 
-export class IncidentsPage extends React.Component<DispatchProps> {
-    public shouldComponentUpdate(nextProps: DispatchProps) {
-        if (nextProps && nextProps.requesting !== this.props.requesting) {
-            return true;
-        }
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface IState {}
 
-        if (nextProps && nextProps.incidents.length === 0 && this.props.incidents.length === 0) {
-            return false;
-        }
+export class IncidentsPage extends React.Component<IProps & IDispatchProps, IState> {
+    public shouldComponentUpdate(nextProps: IProps) {
+        if (nextProps) {
+            if (nextProps.requesting !== this.props.requesting) {
+                return true;
+            }
 
-        if (nextProps && nextProps.incidents !== this.props.incidents) {
-            return true;
+            if (nextProps.incidents.length === 0 && this.props.incidents.length === 0) {
+                return false;
+            }
+
+            if (nextProps.incidents !== this.props.incidents) {
+                return true;
+            }
+
+            if (nextProps.totalPages !== this.props.totalPages) {
+                return true;
+            }
         }
 
         return false;
@@ -44,6 +64,7 @@ export class IncidentsPage extends React.Component<DispatchProps> {
         }
 
         const incidents = this.props.incidents || [];
+        const { currentPage, totalPages, changePage } = this.props;
 
         return (
             <Container data-test-id="incidents-list">
@@ -52,15 +73,35 @@ export class IncidentsPage extends React.Component<DispatchProps> {
                 ) : (
                     incidents.map((incident, index) => <Incident key={index} {...incident} />)
                 )}
+                <Pagination currentPage={currentPage} totalPages={totalPages} onChange={changePage} />
             </Container>
         );
     }
 }
 
-const mapStateToProps = ({ incidents: { incidents = [], requesting, error } }: AppState) => ({
-    incidents,
-    requesting,
-    error,
+const mapStateToProps = (state: IAppState) => {
+    const {
+        incidents: { incidents = [], requesting, error, currentPage },
+    } = state;
+
+    const totalPages = selectTotalPages(state);
+
+    return {
+        incidents,
+        requesting,
+        error,
+        currentPage: currentPage || 0,
+        totalPages,
+    };
+};
+
+const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
+    changePage: (page: number) => {
+        dispatch(new IncidentsRequest({ ...defaultOptions, page }));
+    },
 });
 
-export const ConnectedIncidentsPage = connect(mapStateToProps)(IncidentsPage);
+export const ConnectedIncidentsPage = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(IncidentsPage);

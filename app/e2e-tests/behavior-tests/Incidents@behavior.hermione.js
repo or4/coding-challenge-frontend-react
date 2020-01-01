@@ -80,6 +80,124 @@ describe('Behaviour. Incidents list', () => {
                     assert.isOk(result.value === 10, 'Should be 10 incidents per page');
                 });
         });
+
+        it('should change page by next button', function() {
+            let prevTitle;
+
+            return this.browser
+                .url('/')
+                .execute(appStart)
+                .waitForVisible('[data-test-id="pagination-next"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+                    const incidentTitle = firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+
+                    const nextButton = document.body.querySelector('[data-test-id="pagination-next"]');
+                    nextButton.click();
+
+                    return incidentTitle;
+                })
+                .then(result => {
+                    prevTitle = result.value;
+                })
+                .waitForVisible('[data-test-id="pagination"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+
+                    return firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+                })
+                .then(({ value }) => {
+                    assert.isOk(value !== prevTitle, 'Should be different incidents titles from different pages');
+                });
+        });
+
+        it('should change page by prev button', function() {
+            let prevTitle;
+            let nextTitle;
+
+            return this.browser
+                .url('/')
+                .execute(appStart)
+                .waitForVisible('[data-test-id="pagination-next"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+                    const incidentTitle = firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+
+                    const nextButton = document.body.querySelector('[data-test-id="pagination-next"]');
+                    nextButton.click();
+
+                    return incidentTitle;
+                })
+                .then(result => {
+                    prevTitle = result.value;
+                })
+                .waitForVisible('[data-test-id="pagination-prev"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+
+                    const prevButton = document.body.querySelector('[data-test-id="pagination-prev"]');
+                    prevButton.click();
+
+                    return firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+                })
+                .then(result => {
+                    nextTitle = result.value;
+                })
+                .waitForVisible('[data-test-id="pagination-next"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+
+                    return firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+                })
+                .then(result => {
+                    assert.isOk(nextTitle !== prevTitle, 'Should be different incidents titles from different pages');
+                    assert.isOk(result.value === prevTitle, 'Should be equal titles after change page to prev');
+                });
+        });
+
+        it('should change pages by number buttons', function() {
+            let prevTitle;
+            let nextTitle;
+
+            return this.browser
+                .url('/')
+                .execute(appStart)
+                .waitForVisible('[data-test-id="pagination-next"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+                    const incidentTitle = firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+
+                    const secondPageButton = document.body.querySelector('[data-test-id="pagination-page-2"]');
+                    secondPageButton.click();
+
+                    return incidentTitle;
+                })
+                .then(result => {
+                    prevTitle = result.value;
+                })
+                .waitForVisible('[data-test-id="pagination-prev"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+
+                    const firstPageButton = document.body.querySelector('[data-test-id="pagination-page-1"]');
+                    firstPageButton.click();
+
+                    return firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+                })
+                .then(result => {
+                    nextTitle = result.value;
+                })
+                .waitForVisible('[data-test-id="pagination-next"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+
+                    return firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+                })
+                .then(result => {
+                    assert.isOk(nextTitle !== prevTitle, 'Should be different incidents titles from different pages');
+                    assert.isOk(result.value === prevTitle, 'Should be equal titles after change page to prev');
+                });
+        });
     });
 
     // describe('I want to see a total number of bike theft cases.', () => {});

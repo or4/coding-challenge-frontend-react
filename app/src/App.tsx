@@ -1,21 +1,25 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 
 import { Layout } from 'components/common/Layout';
 import { store } from 'core/store';
-import { IncidentsRequest, defaultIncidentRequestOptions } from 'core/incidents/actions';
+import { IncidentsRequest } from 'core/incidents/actions';
+import { defaultOptions, maxIncidentsCountOptions } from 'core/incidents/contstants';
 import { ConnectedIncidentsPage } from 'pages/IncidentsPage';
 
-export const AppWithStore: React.FC = () => {
-    useEffect(() => {
-        store.dispatch(new IncidentsRequest(defaultIncidentRequestOptions));
-    });
+export class AppWithStore extends React.Component {
+    public componentDidMount() {
+        store.dispatch(new IncidentsRequest(defaultOptions));
+        store.dispatch(new IncidentsRequest(maxIncidentsCountOptions));
+    }
 
-    return (
-        <Provider store={store}>
-            <Layout>
-                <ConnectedIncidentsPage />
-            </Layout>
-        </Provider>
-    );
-};
+    public render() {
+        return (
+            <Provider store={store}>
+                <Layout>
+                    <ConnectedIncidentsPage />
+                </Layout>
+            </Provider>
+        );
+    }
+}

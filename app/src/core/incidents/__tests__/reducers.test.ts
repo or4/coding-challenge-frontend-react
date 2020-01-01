@@ -2,13 +2,9 @@ import createHttpError from 'http-errors';
 import { promisify } from 'util';
 import { IIncidentRequestOptions, IIncident } from 'types';
 
-import { incidentsReducer, IIncidentsState } from '../reducers';
-import {
-    IncidentsRequest,
-    IncidentsRequestSuccess,
-    IncidentsRequestFail,
-    defaultIncidentRequestOptions,
-} from '../actions';
+import { incidentsReducer, IIncidentsState, selectTotalPages } from '../reducers';
+import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
+import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Incidents reducer', () => {
@@ -48,7 +44,7 @@ describe('Incidents reducer', () => {
         });
 
         it('should return right state action with options', () => {
-            expect(incidentsReducer(state, new IncidentsRequest(defaultIncidentRequestOptions))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequest(defaultOptions))).toEqual({
                 requesting: true,
             });
         });
@@ -56,6 +52,7 @@ describe('Incidents reducer', () => {
 
     describe('IncidentsRequestSuccess', () => {
         it('should return right state with empty incidents', () => {
+            const currentPage = 1;
             state = {
                 requesting: true,
             };
@@ -64,10 +61,12 @@ describe('Incidents reducer', () => {
             expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
                 requesting: false,
                 incidents: [],
+                currentPage,
             });
         });
 
         it('should return right state with incidents', () => {
+            const currentPage = 1;
             state = {
                 requesting: true,
             };
@@ -76,6 +75,48 @@ describe('Incidents reducer', () => {
             expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
                 requesting: false,
                 incidents,
+                currentPage,
+            });
+        });
+
+        it('should return right state when currentPage is not defined', () => {
+            const currentPage = 1;
+            state = {
+                requesting: true,
+            };
+            const incidents: IIncident[] = [];
+
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
+                requesting: false,
+                incidents: [],
+                currentPage,
+            });
+        });
+
+        it('should return state with currentPage equals 3', () => {
+            const currentPage = 3;
+            state = {
+                requesting: true,
+            };
+            const incidents: IIncident[] = [];
+
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, { page: currentPage }))).toEqual({
+                requesting: false,
+                incidents: [],
+                currentPage,
+            });
+        });
+
+        it('should return state with totalIncidents', () => {
+            state = {};
+            const incidentsCount = 74;
+            const incidents = getFakeIncidents(incidentsCount);
+            const options = {
+                perPage: MAX_INCIDENTS_COUNT,
+            };
+
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, options))).toEqual({
+                totalIncidents: incidentsCount,
             });
         });
     });
@@ -103,6 +144,48 @@ describe('Incidents reducer', () => {
             expect(incidentsReducer(state, new IncidentsRequestFail(error))).toEqual({
                 requesting: false,
             });
+        });
+    });
+
+    describe('selectTotalPages', () => {
+        it('should return 0 totalPages for 0 incidents', () => {
+            const state = {
+                incidents: {
+                    totalIncidents: 0,
+                },
+            };
+
+            expect(selectTotalPages(state)).toEqual(0);
+        });
+
+        it('should return 1 totalPages for 1 incidents', () => {
+            const state = {
+                incidents: {
+                    totalIncidents: 1,
+                },
+            };
+
+            expect(selectTotalPages(state)).toEqual(1);
+        });
+
+        it('should return 1 totalPages for 9 incidents', () => {
+            const state = {
+                incidents: {
+                    totalIncidents: 9,
+                },
+            };
+
+            expect(selectTotalPages(state)).toEqual(1);
+        });
+
+        it('should return 2 totalPages for 11 incidents', () => {
+            const state = {
+                incidents: {
+                    totalIncidents: 11,
+                },
+            };
+
+            expect(selectTotalPages(state)).toEqual(2);
         });
     });
 });

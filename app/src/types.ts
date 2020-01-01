@@ -10,6 +10,11 @@ export interface IIncidentRequestOptions {
     perPage?: number; // Number of results to return per page.
 }
 
+export interface IIncidentSuccessRequestOptions {
+    page?: number;
+    perPage?: number;
+}
+
 export interface IIncident {
     id: number;
     title?: string;

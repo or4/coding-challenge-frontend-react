@@ -2,7 +2,7 @@ const { timeout } = require('../utils/app');
 const { mockIncidents, mockIncidentsWithError, mockEmptyIncidents } = require('../__mocks__/mockIncidents');
 
 describe('Screenshot. Incidents', function() {
-    it('match loading scrennshot', function() {
+    it('should match loading scrennshot', function() {
         return this.browser
             .url('/')
             .execute(mockIncidents)
@@ -10,7 +10,7 @@ describe('Screenshot. Incidents', function() {
             .assertView('loading', '[data-test-id="loading"]');
     });
 
-    it('match incidents list scrennshot', function() {
+    it('should match incidents list scrennshot', function() {
         return this.browser
             .url('/')
             .execute(mockIncidents)
@@ -19,7 +19,21 @@ describe('Screenshot. Incidents', function() {
             .assertView('incidents-list', '[data-test-id="incidents-list"]');
     });
 
-    it('match page scrennshot', function() {
+    it('should match paging scrennshot', function() {
+        return this.browser
+            .url('/')
+            .execute(mockIncidents)
+            .waitForVisible('[data-test-id="pagination-next"]', timeout)
+            .execute(() => {
+                const secondPageButton = document.body.querySelector('[data-test-id="pagination-page-2"]');
+                secondPageButton.click();
+            })
+            .then(() => {})
+            .waitForVisible('[data-test-id="pagination-prev"]', timeout)
+            .assertView('pagination', '[data-test-id="pagination"]');
+    });
+
+    it('should match page scrennshot', function() {
         return this.browser
             .url('/')
             .execute(mockIncidents)
@@ -29,7 +43,7 @@ describe('Screenshot. Incidents', function() {
     });
 
     describe('Error state', () => {
-        it('match error state scrennshot', function() {
+        it('should match error state scrennshot', function() {
             return this.browser
                 .url('/')
                 .execute(mockIncidentsWithError)
@@ -39,7 +53,7 @@ describe('Screenshot. Incidents', function() {
     });
 
     describe('Empty state', () => {
-        it('match empty state scrennshot', function() {
+        it('should match empty state scrennshot', function() {
             return this.browser
                 .url('/')
                 .execute(mockEmptyIncidents)

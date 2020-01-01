@@ -2,7 +2,7 @@ function mockIncidents() {
     const imageUrl = ['https://files.bikeindex.org/uploads/Pu/139855/large_bike-3.jpg', 'https:/foo.bar/1.jpg'];
     const imageUrlThumb = ['https://files.bikeindex.org/uploads/Pu/139855/small_bike-3.jpg', 'https:/foo.bar/1.jpg'];
 
-    const fakeIncidents = Array.from(Array(3).keys()).reduce((acc, id) => {
+    const reduceFunc = (acc, id) => {
         acc[id] = {
             id,
             address: 'Berlin, 10963, DE',
@@ -26,15 +26,26 @@ function mockIncidents() {
             url: 'https://bikewise.org/api/v1/incidents/109462',
         };
         return acc;
-    }, []);
+    };
+
+    const fakeIncidents3 = Array.from(Array(3).keys()).reduce(reduceFunc, []);
+    const fakeIncidents74 = Array.from(Array(74).keys()).reduce(reduceFunc, []);
 
     window.e2e.api.get = function(...args) {
-        const [url] = args;
+        const [url, data] = args;
 
         if (url === '/incidents') {
+            if (data.perPage !== 10) {
+                return new Promise(function(resolve) {
+                    setTimeout(function() {
+                        resolve({ status: 200, data: { incidents: fakeIncidents74 } });
+                    }, 2000);
+                });
+            }
+
             return new Promise(function(resolve) {
                 setTimeout(function() {
-                    resolve({ status: 200, data: { incidents: fakeIncidents } });
+                    resolve({ status: 200, data: { incidents: fakeIncidents3 } });
                 }, 2000);
             });
         }

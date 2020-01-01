@@ -4,19 +4,15 @@ import createSagaMiddleware from 'redux-saga';
 import configureMockStore, { MockStoreEnhanced } from 'redux-mock-store';
 
 import { api } from 'core/api';
-import { reducers, AppState } from 'core/reducers';
+import { reducers, IAppState } from 'core/reducers';
 import { sagas } from 'core/sagas';
 import { actionToPlainObject } from 'core/store';
 import { applyActions } from 'core/utils/applyActions';
 import { moxiosWait } from 'core/utils/moxiosWait';
 import { IIncident, IIncidentRequestOptions } from 'types';
 
-import {
-    IncidentsRequestSuccess,
-    IncidentsRequest,
-    IncidentsRequestFail,
-    defaultIncidentRequestOptions,
-} from '../actions';
+import { IncidentsRequestSuccess, IncidentsRequest, IncidentsRequestFail } from '../actions';
+import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 import { transform } from '../sagas';
 
@@ -34,7 +30,7 @@ describe('Incidents redux tests', () => {
     });
 
     describe('Check InicdentsRequest', () => {
-        let state: AppState;
+        let state: IAppState;
         let store: MockStoreEnhanced<unknown, {}>;
 
         beforeEach(() => {
@@ -43,10 +39,11 @@ describe('Incidents redux tests', () => {
             sagaMiddleware.run(sagas);
         });
 
-        it('should work correctly with empty incidents and empty options', async done => {
+        it('should work correctly with empty incidents and empty options', async () => {
             const incidents: IIncident[] = [];
+            const currentPage = 1;
 
-            const options: IIncidentRequestOptions = { page: 1 };
+            const options: IIncidentRequestOptions = { page: currentPage };
             store.dispatch(new IncidentsRequest(options));
 
             await moxiosWait();
@@ -65,15 +62,15 @@ describe('Incidents redux tests', () => {
                 incidents: {
                     incidents: incidentsExpected,
                     requesting: false,
+                    currentPage,
                 },
             });
-
-            done();
         });
 
-        it('should work correctly with a few incidents', async done => {
-            const action = new IncidentsRequest(defaultIncidentRequestOptions);
+        it('should work correctly with a few incidents', async () => {
+            const action = new IncidentsRequest(defaultOptions);
             const incidents: IIncident[] = getFakeIncidents(3);
+            const currentPage = 1;
 
             store.dispatch(action);
 
@@ -86,8 +83,8 @@ describe('Incidents redux tests', () => {
             const incidentsExpected = transform(incidents);
 
             expect(actions).toEqual([
-                new IncidentsRequest(defaultIncidentRequestOptions),
-                new IncidentsRequestSuccess(incidentsExpected),
+                new IncidentsRequest(defaultOptions),
+                new IncidentsRequestSuccess(incidentsExpected, { page: currentPage, perPage: 10 }),
             ]);
 
             const localState = applyActions(reducers, state, actions);
@@ -96,13 +93,117 @@ describe('Incidents redux tests', () => {
                 incidents: {
                     incidents: incidentsExpected,
                     requesting: false,
+                    currentPage,
                 },
             });
-
-            done();
         });
 
-        it('should not work with error', async done => {
+        it('should return state where currentPage is 3', async () => {
+            const incidents: IIncident[] = [];
+            const currentPage = 3;
+
+            const options: IIncidentRequestOptions = { page: currentPage };
+            store.dispatch(new IncidentsRequest(options));
+
+            await moxiosWait();
+
+            let request = moxios.requests.mostRecent();
+            await request.respondWith({ status: 200, response: { status: 200, incidents } });
+
+            const actions = store.getActions();
+            const incidentsExpected = transform(incidents);
+
+            expect(actions).toEqual([
+                new IncidentsRequest(options),
+                new IncidentsRequestSuccess(incidentsExpected, { page: currentPage }),
+            ]);
+
+            const localState = applyActions(reducers, state, actions);
+
+            expect(localState).toEqual({
+                incidents: {
+                    incidents: incidentsExpected,
+                    requesting: false,
+                    currentPage,
+                },
+            });
+        });
+
+        it('should return state with totalIncidents', async () => {
+            const totalIncidents = 74;
+            const incidents: IIncident[] = getFakeIncidents(totalIncidents);
+            const currentPage = 1;
+
+            const options: IIncidentRequestOptions = {
+                incidentType: 'theft',
+                proximity: 'Berlin',
+                proximitySquare: 50,
+                page: currentPage,
+                perPage: MAX_INCIDENTS_COUNT,
+            };
+            store.dispatch(new IncidentsRequest(options));
+
+            await moxiosWait();
+
+            let request = moxios.requests.mostRecent();
+            await request.respondWith({ status: 200, response: { status: 200, incidents } });
+
+            const actions = store.getActions();
+            const incidentsExpected = transform(incidents);
+
+            expect(actions).toEqual([
+                new IncidentsRequest(options),
+                new IncidentsRequestSuccess(incidentsExpected, { page: currentPage, perPage: MAX_INCIDENTS_COUNT }),
+            ]);
+
+            const localState = applyActions(reducers, state, actions);
+
+            expect(localState).toEqual({
+                incidents: {
+                    totalIncidents,
+                },
+            });
+        });
+
+        it('should changePage', async () => {
+            const totalIncidents = 74;
+            const incidents: IIncident[] = getFakeIncidents(totalIncidents);
+            const newPage = 2;
+
+            const options: IIncidentRequestOptions = {
+                incidentType: 'theft',
+                proximity: 'Berlin',
+                proximitySquare: 50,
+                page: newPage,
+                perPage: 10,
+            };
+            store.dispatch(new IncidentsRequest(options));
+
+            await moxiosWait();
+
+            let request = moxios.requests.mostRecent();
+            await request.respondWith({ status: 200, response: { status: 200, incidents } });
+
+            const actions = store.getActions();
+            const incidentsExpected = transform(incidents);
+
+            expect(actions).toEqual([
+                new IncidentsRequest(options),
+                new IncidentsRequestSuccess(incidentsExpected, { page: newPage, perPage: 10 }),
+            ]);
+
+            const localState = applyActions(reducers, state, actions);
+
+            expect(localState).toEqual({
+                incidents: {
+                    incidents: incidentsExpected,
+                    requesting: false,
+                    currentPage: newPage,
+                },
+            });
+        });
+
+        it('should not work with error', async () => {
             const options: IIncidentRequestOptions = {
                 proximity: 'unexpected_proximity',
                 page: 1,
@@ -129,8 +230,6 @@ describe('Incidents redux tests', () => {
                     requesting: false,
                 },
             });
-
-            done();
         });
     });
 });

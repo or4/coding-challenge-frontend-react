@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { IIncidentRequestOptions, IIncident } from 'types';
+import { IIncidentRequestOptions, IIncident, IIncidentSuccessRequestOptions } from 'types';
 
 export enum IncidentsActionType {
     IncidentsRequest = 'Incidents/incidents request',
@@ -16,20 +16,14 @@ export class IncidentsRequest implements Action {
     }
 }
 
-export const defaultIncidentRequestOptions: IIncidentRequestOptions = {
-    incidentType: 'theft',
-    proximity: 'Berlin',
-    proximitySquare: 50,
-    perPage: 10,
-    page: 1,
-};
-
 export class IncidentsRequestSuccess implements Action {
     public readonly type = IncidentsActionType.IncidentsRequestSuccess;
     public incidents: IIncident[];
+    public options: IIncidentSuccessRequestOptions;
 
-    public constructor(incidents: IIncident[]) {
+    public constructor(incidents: IIncident[], options: IIncidentSuccessRequestOptions = { page: 1 }) {
         this.incidents = incidents;
+        this.options = options;
     }
 }
 

@@ -18,10 +18,12 @@ export function* incidents({ options }: IncidentsRequest) {
         window.e2e.responses.push(data);
     }
 
-    yield put(new IncidentsRequestSuccess(transform(data.incidents)));
+    const { page, perPage } = options;
+
+    yield put(new IncidentsRequestSuccess(transform(data.incidents), { page, perPage }));
 }
 
-// pick necessary incident props
+// pick only necessary incident props
 export const transform: (incidents: IIncidentDb[]) => IIncident[] = incidents =>
     incidents.map(({ id, title, description, address, media, occurredAt }) => ({
         id,

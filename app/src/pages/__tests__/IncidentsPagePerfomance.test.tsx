@@ -24,13 +24,14 @@ describe('IncidentsPage', () => {
 
     afterEach(() => {
         moxios.uninstall(api.axiosInstance as AxiosInstance);
+        jest.clearAllMocks();
 
         if (root) {
             document.body.removeChild(root);
         }
     });
 
-    it('should render two times', async done => {
+    it('should render a few times', async () => {
         const renderSpy = jest.spyOn(IncidentsPage.prototype, 'render');
 
         act(() => {
@@ -38,19 +39,22 @@ describe('IncidentsPage', () => {
         });
 
         const incidents: IIncident[] = getFakeIncidents(3);
+        const incidentsTotal: IIncident[] = getFakeIncidents(74);
 
         await moxiosWait();
 
-        let request = moxios.requests.mostRecent();
+        let request = moxios.requests.at(0);
         await request.respondWith({ status: 200, response: { status: 200, incidents } });
+
+        request = moxios.requests.at(1);
+        await request.respondWith({ status: 200, response: { status: 200, incidents: incidentsTotal } });
 
         // 1 - empty incidents
         // 2 - loading..
         // 3 - actual incidents list
-        expect(renderSpy).toHaveBeenCalledTimes(3);
+        // 4 - changed totalPages
+        expect(renderSpy).toHaveBeenCalledTimes(4);
 
         renderSpy.mockClear();
-
-        done();
     });
 });

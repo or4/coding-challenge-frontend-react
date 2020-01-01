@@ -7,15 +7,17 @@ import { mount } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 import moxios from 'moxios';
 
+import { AppWithStore } from 'App';
 import { Error } from 'components/common/Error';
 import { Loading } from 'components/common/Loading';
+import { Pagination } from 'components/incidents/Pagination';
+import { Button } from 'components/incidents/Pagination/style';
 import { api } from 'core/api';
 import { moxiosWait } from 'core/utils/moxiosWait';
 import { getFakeIncidents } from 'core/incidents/__mocks__/fakeIncidents';
-import { ConnectedIncidentsPage } from 'pages/IncidentsPage';
 import { IIncident } from 'types';
 
-import { AppWithStore } from 'App';
+import { ConnectedIncidentsPage, IncidentsPage } from '../IncidentsPage';
 
 describe('IncidentsPage', () => {
     describe('Check componennt with real store', () => {
@@ -51,12 +53,15 @@ describe('IncidentsPage', () => {
                 ReactDOM.render(<AppWithStore />, root);
             });
 
-            const incidents: IIncident[] = getFakeIncidents(3);
-
             await moxiosWait();
 
-            let request = moxios.requests.mostRecent();
+            const incidents: IIncident[] = getFakeIncidents(3);
+            let request = moxios.requests.at(0);
             await request.respondWith({ status: 200, response: { status: 200, incidents } });
+
+            const incidentsMaxCount: IIncident[] = getFakeIncidents(74);
+            request = moxios.requests.at(1);
+            await request.respondWith({ status: 200, response: { status: 200, incidents: incidentsMaxCount } });
 
             const container = root.querySelectorAll('[data-test-id="incident"]');
             expect(container).toHaveLength(3);
@@ -77,7 +82,7 @@ describe('IncidentsPage', () => {
             const loadingContainer = root.querySelectorAll('[data-test-id="loading"]');
             expect(loadingContainer).toHaveLength(1);
 
-            let request = moxios.requests.mostRecent();
+            let request = moxios.requests.at(0);
             await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
             const itemsContainer = root.querySelectorAll('[data-test-id="incident"]');
@@ -115,63 +120,125 @@ describe('IncidentsPage', () => {
     });
 
     describe('Check connected component', () => {
-        it('should render loading', () => {
-            const initialState = { incidents: { incidents: [], requesting: true } };
-            const mockStore = configureMockStore();
-            const store = mockStore(initialState);
+        describe('Loading', () => {
+            it('should render', () => {
+                const initialState = { incidents: { incidents: [], requesting: true } };
+                const mockStore = configureMockStore();
+                const store = mockStore(initialState);
 
-            const container = mount(
-                <Provider store={store}>
-                    <ConnectedIncidentsPage />
-                </Provider>
-            );
+                const container = mount(
+                    <Provider store={store}>
+                        <ConnectedIncidentsPage />
+                    </Provider>
+                );
 
-            const wrapper = container.find(Loading);
+                const wrapper = container.find(Loading);
 
-            expect(wrapper).toHaveLength(1);
-            expect(wrapper.text()).toEqual('Loading ...');
+                expect(wrapper).toHaveLength(1);
+                expect(wrapper.text()).toEqual('Loading ...');
+            });
+
+            it('should not render', () => {
+                const initialState = { incidents: { incidents: [], requesting: false } };
+                const mockStore = configureMockStore();
+                const store = mockStore(initialState);
+
+                const container = mount(
+                    <Provider store={store}>
+                        <ConnectedIncidentsPage />
+                    </Provider>
+                );
+
+                const wrapper = container.find(Loading);
+
+                expect(wrapper.find(Loading)).toHaveLength(0);
+            });
         });
 
-        it('should not render loading', () => {
-            const initialState = { incidents: { incidents: [], requesting: false } };
-            const mockStore = configureMockStore();
-            const store = mockStore(initialState);
-
-            const container = mount(
-                <Provider store={store}>
-                    <ConnectedIncidentsPage />
-                </Provider>
-            );
-
-            const wrapper = container.find(Loading);
-
-            expect(wrapper.find(Loading)).toHaveLength(0);
-        });
-
-        it('should render error', () => {
-            const initialState = {
-                incidents: {
-                    incidents: [],
-                    requesting: false,
-                    error: {
-                        status: 400,
-                        data: { error: 'incident_type does not have a valid value' },
+        describe('Error', () => {
+            it('should render', () => {
+                const initialState = {
+                    incidents: {
+                        incidents: [],
+                        requesting: false,
+                        error: {
+                            status: 400,
+                            data: { error: 'incident_type does not have a valid value' },
+                        },
                     },
-                },
-            };
-            const mockStore = configureMockStore();
-            const store = mockStore(initialState);
+                };
+                const mockStore = configureMockStore();
+                const store = mockStore(initialState);
 
-            const container = mount(
-                <Provider store={store}>
-                    <ConnectedIncidentsPage />
-                </Provider>
-            );
+                const container = mount(
+                    <Provider store={store}>
+                        <ConnectedIncidentsPage />
+                    </Provider>
+                );
 
-            const wrapper = container.find(Error);
+                const wrapper = container.find(Error);
 
-            expect(wrapper).toHaveLength(1);
-            expect(wrapper.text()).toEqual('Ooops, something went wrong');
+                expect(wrapper).toHaveLength(1);
+                expect(wrapper.text()).toEqual('Ooops, something went wrong');
+            });
+        });
+
+        describe('Paging', () => {
+            it('should render', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const initialState = { incidents: { incidents, requesting: false, currentPage: 1, totalIncidents: 1 } };
+                const mockStore = configureMockStore();
+                const store = mockStore(initialState);
+
+                const container = mount(
+                    <Provider store={store}>
+                        <ConnectedIncidentsPage />
+                    </Provider>
+                );
+
+                const wrapper = container.find(Pagination);
+
+                expect(wrapper).toHaveLength(1);
+                expect(wrapper.text()).toEqual('1');
+            });
+
+            it('should not render', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const initialState = { incidents: { incidents, requesting: false } };
+                const mockStore = configureMockStore();
+                const store = mockStore(initialState);
+
+                const container = mount(
+                    <Provider store={store}>
+                        <ConnectedIncidentsPage />
+                    </Provider>
+                );
+
+                const wrapper = container.find(Pagination);
+
+                expect(wrapper).toHaveLength(1);
+                expect(wrapper.text()).toEqual(null);
+            });
+
+            it('should change page when click page button', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const changePage = jest.fn();
+                const container = mount(
+                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={changePage} />
+                );
+
+                const wrapper = container.find(Pagination);
+                expect(wrapper).toHaveLength(1);
+
+                const buttons = wrapper.find(Button);
+
+                const button = buttons.at(1);
+
+                expect(button.text()).toEqual('2');
+                button.simulate('click');
+                expect(changePage).toHaveBeenCalledTimes(1);
+                expect(changePage).toHaveBeenCalledWith(2);
+            });
         });
     });
 });
