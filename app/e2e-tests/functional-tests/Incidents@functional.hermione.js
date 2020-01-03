@@ -196,4 +196,23 @@ describe('Functional. Incidents Page', () => {
                 });
         });
     });
+
+    describe('Total incidents', () => {
+        it('should render', function() {
+            return this.browser
+                .url('/')
+                .execute(mockIncidents)
+                .waitForVisible('[data-test-id="total-incidents"]', timeout)
+                .execute(() =>
+                    Array.prototype.map.call(
+                        document.body.querySelectorAll('[data-test-id="total-incidents"]'),
+                        ({ textContent }) => textContent
+                    )
+                )
+                .then(result => {
+                    assert.isOk(result.value.length === 1, 'It should be one total incident section');
+                    assert.isOk(result.value[0] === 'Total: 74', 'It should match text value');
+                });
+        });
+    });
 });

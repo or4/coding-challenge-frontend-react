@@ -13,6 +13,7 @@ import { IAppState } from 'core/reducers';
 import { IIncident } from 'types';
 import { IncidentsRequest } from 'core/incidents/actions';
 import { defaultOptions } from 'core/incidents/contstants';
+import { TotalIncidents } from 'components/incidents/TotalIncidents';
 
 export const Container = styled.div``;
 
@@ -25,6 +26,7 @@ interface IProps {
     requesting?: boolean;
     currentPage: number;
     totalPages: number;
+    totalIncidents?: number;
     error?: object;
 }
 
@@ -64,24 +66,27 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps, ISta
         }
 
         const incidents = this.props.incidents || [];
-        const { currentPage, totalPages, changePage } = this.props;
+        const { currentPage, totalPages, totalIncidents, changePage } = this.props;
 
         return (
-            <Container data-test-id="incidents-list">
-                {incidents.length === 0 ? (
-                    <EmptyResults />
-                ) : (
-                    incidents.map((incident, index) => <Incident key={index} {...incident} />)
-                )}
-                <Pagination currentPage={currentPage} totalPages={totalPages} onChange={changePage} />
-            </Container>
+            <>
+                <TotalIncidents value={totalIncidents} />
+                <Container data-test-id="incidents-list">
+                    {incidents.length === 0 ? (
+                        <EmptyResults />
+                    ) : (
+                        incidents.map((incident, index) => <Incident key={index} {...incident} />)
+                    )}
+                    <Pagination currentPage={currentPage} totalPages={totalPages} onChange={changePage} />
+                </Container>
+            </>
         );
     }
 }
 
 const mapStateToProps = (state: IAppState) => {
     const {
-        incidents: { incidents = [], requesting, error, currentPage },
+        incidents: { incidents = [], requesting, error, currentPage, totalIncidents },
     } = state;
 
     const totalPages = selectTotalPages(state);
@@ -92,6 +97,7 @@ const mapStateToProps = (state: IAppState) => {
         error,
         currentPage: currentPage || 0,
         totalPages,
+        totalIncidents,
     };
 };
 

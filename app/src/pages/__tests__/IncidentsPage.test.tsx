@@ -18,6 +18,8 @@ import { getFakeIncidents } from 'core/incidents/__mocks__/fakeIncidents';
 import { IIncident } from 'types';
 
 import { ConnectedIncidentsPage, IncidentsPage } from '../IncidentsPage';
+import { TotalIncidents } from 'components/incidents/TotalIncidents';
+import { EmptyResults } from 'components/incidents/EmptyResults';
 
 describe('IncidentsPage', () => {
     describe('Check componennt with real store', () => {
@@ -238,6 +240,76 @@ describe('IncidentsPage', () => {
                 button.simulate('click');
                 expect(changePage).toHaveBeenCalledTimes(1);
                 expect(changePage).toHaveBeenCalledWith(2);
+            });
+        });
+
+        describe('EmptyState', () => {
+            it('should render empty state', () => {
+                const incidents: IIncident[] = [];
+                const wrapper = mount(
+                    <IncidentsPage
+                        incidents={incidents}
+                        currentPage={0}
+                        totalPages={0}
+                        totalIncidents={0}
+                        changePage={() => {}}
+                    />
+                );
+
+                const emptyResultsContainer = wrapper.find(EmptyResults);
+                expect(emptyResultsContainer).toHaveLength(1);
+                expect(emptyResultsContainer.text()).toEqual('No results');
+            });
+        });
+
+        describe('TotalIncidents', () => {
+            it('should render', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const wrapper = mount(
+                    <IncidentsPage
+                        incidents={incidents}
+                        currentPage={1}
+                        totalPages={2}
+                        totalIncidents={15}
+                        changePage={() => {}}
+                    />
+                );
+
+                const container = wrapper.find(TotalIncidents);
+                expect(container).toHaveLength(1);
+                expect(container.text()).toEqual('Total: 15');
+            });
+
+            it('should not render', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const wrapper = mount(
+                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                );
+
+                const container = wrapper.find(TotalIncidents);
+
+                expect(container).toHaveLength(1);
+                expect(container.html()).toEqual(null);
+            });
+
+            it('should render when empty incidents', () => {
+                const incidents: IIncident[] = [];
+                const wrapper = mount(
+                    <IncidentsPage
+                        incidents={incidents}
+                        currentPage={0}
+                        totalPages={0}
+                        totalIncidents={0}
+                        changePage={() => {}}
+                    />
+                );
+
+                const emptyResultsContainer = wrapper.find(EmptyResults);
+                expect(emptyResultsContainer).toHaveLength(1);
+
+                const totalIncidentsContainer = wrapper.find(TotalIncidents);
+                expect(totalIncidentsContainer).toHaveLength(1);
+                expect(totalIncidentsContainer.text()).toEqual('Total: 0');
             });
         });
     });

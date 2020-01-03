@@ -200,7 +200,28 @@ describe('Behaviour. Incidents list', () => {
         });
     });
 
-    // describe('I want to see a total number of bike theft cases.', () => {});
+    describe('I want to see a total number of bike theft cases.', () => {
+        it('should render total number', function() {
+            return this.browser
+                .url('/')
+                .execute(appStart)
+                .waitForVisible('[data-test-id="incidents-list"]', timeout)
+                .waitForVisible('[data-test-id="total-incidents"]', timeout)
+                .execute(() => {
+                    return Array.prototype.map.call(
+                        document.body.querySelectorAll('[data-test-id="total-incidents"]'),
+                        ({ textContent }) => textContent
+                    );
+                })
+                .then(result => {
+                    assert.isOk(result.value.length === 1, 'Count sections of total incidents should be one');
+
+                    const text = 'Total: ';
+                    const totalIncidents = result.value[0].slice(text.length);
+                    assert.isOk(Number(totalIncidents) >= 0, 'Total incidents should be equal zero or more than zero');
+                });
+        });
+    });
     // describe('I want to filter reported bike thefts by partial case title.', () => {});
     // describe('I want to filter reported bike thefts by date range.', () => {});
 });
