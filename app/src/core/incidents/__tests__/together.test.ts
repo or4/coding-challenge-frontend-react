@@ -15,6 +15,7 @@ import { IncidentsRequestSuccess, IncidentsRequest, IncidentsRequestFail } from 
 import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 import { transform } from '../sagas';
+import { IIncidentsState } from '../reducers';
 
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [sagaMiddleware, actionToPlainObject];
@@ -32,18 +33,19 @@ describe('Incidents redux tests', () => {
     describe('Check InicdentsRequest', () => {
         let state: IAppState;
         let store: MockStoreEnhanced<unknown, {}>;
+        const initialState: IIncidentsState = { requestOptions: {} };
 
         beforeEach(() => {
-            state = { incidents: {} };
+            state = { incidents: { ...initialState } };
             store = mockStore(state);
             sagaMiddleware.run(sagas);
         });
 
         it('should work correctly with empty incidents and empty options', async () => {
             const incidents: IIncident[] = [];
-            const currentPage = 1;
+            const page = 1;
 
-            const options: IIncidentRequestOptions = { page: currentPage };
+            const options: IIncidentRequestOptions = { page };
             store.dispatch(new IncidentsRequest(options));
 
             await moxiosWait();
@@ -59,10 +61,14 @@ describe('Incidents redux tests', () => {
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
+                ...state,
                 incidents: {
+                    ...state.incidents,
                     incidents: incidentsExpected,
                     requesting: false,
-                    currentPage,
+                    requestOptions: {
+                        page,
+                    },
                 },
             });
         });
@@ -70,7 +76,7 @@ describe('Incidents redux tests', () => {
         it('should work correctly with a few incidents', async () => {
             const action = new IncidentsRequest(defaultOptions);
             const incidents: IIncident[] = getFakeIncidents(3);
-            const currentPage = 1;
+            const page = 1;
 
             store.dispatch(action);
 
@@ -84,25 +90,29 @@ describe('Incidents redux tests', () => {
 
             expect(actions).toEqual([
                 new IncidentsRequest(defaultOptions),
-                new IncidentsRequestSuccess(incidentsExpected, { page: currentPage, perPage: 10 }),
+                new IncidentsRequestSuccess(incidentsExpected, { page, perPage: 10 }),
             ]);
 
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
+                ...state,
                 incidents: {
+                    ...state.incidents,
                     incidents: incidentsExpected,
                     requesting: false,
-                    currentPage,
+                    requestOptions: {
+                        page,
+                    },
                 },
             });
         });
 
         it('should return state where currentPage is 3', async () => {
             const incidents: IIncident[] = [];
-            const currentPage = 3;
+            const page = 3;
 
-            const options: IIncidentRequestOptions = { page: currentPage };
+            const options: IIncidentRequestOptions = { page };
             store.dispatch(new IncidentsRequest(options));
 
             await moxiosWait();
@@ -115,16 +125,20 @@ describe('Incidents redux tests', () => {
 
             expect(actions).toEqual([
                 new IncidentsRequest(options),
-                new IncidentsRequestSuccess(incidentsExpected, { page: currentPage }),
+                new IncidentsRequestSuccess(incidentsExpected, { page }),
             ]);
 
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
+                ...state,
                 incidents: {
+                    ...state.incidents,
                     incidents: incidentsExpected,
                     requesting: false,
-                    currentPage,
+                    requestOptions: {
+                        page,
+                    },
                 },
             });
         });
@@ -132,13 +146,13 @@ describe('Incidents redux tests', () => {
         it('should return state with totalIncidents', async () => {
             const totalIncidents = 74;
             const incidents: IIncident[] = getFakeIncidents(totalIncidents);
-            const currentPage = 1;
+            const page = 1;
 
             const options: IIncidentRequestOptions = {
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 50,
-                page: currentPage,
+                page,
                 perPage: MAX_INCIDENTS_COUNT,
             };
             store.dispatch(new IncidentsRequest(options));
@@ -153,13 +167,15 @@ describe('Incidents redux tests', () => {
 
             expect(actions).toEqual([
                 new IncidentsRequest(options),
-                new IncidentsRequestSuccess(incidentsExpected, { page: currentPage, perPage: MAX_INCIDENTS_COUNT }),
+                new IncidentsRequestSuccess(incidentsExpected, { page, perPage: MAX_INCIDENTS_COUNT }),
             ]);
 
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
+                ...state,
                 incidents: {
+                    ...state.incidents,
                     totalIncidents,
                 },
             });
@@ -168,13 +184,13 @@ describe('Incidents redux tests', () => {
         it('should changePage', async () => {
             const totalIncidents = 74;
             const incidents: IIncident[] = getFakeIncidents(totalIncidents);
-            const newPage = 2;
+            const page = 2;
 
             const options: IIncidentRequestOptions = {
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 50,
-                page: newPage,
+                page,
                 perPage: 10,
             };
             store.dispatch(new IncidentsRequest(options));
@@ -189,16 +205,20 @@ describe('Incidents redux tests', () => {
 
             expect(actions).toEqual([
                 new IncidentsRequest(options),
-                new IncidentsRequestSuccess(incidentsExpected, { page: newPage, perPage: 10 }),
+                new IncidentsRequestSuccess(incidentsExpected, { page, perPage: 10 }),
             ]);
 
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
+                ...state,
                 incidents: {
+                    ...state.incidents,
                     incidents: incidentsExpected,
                     requesting: false,
-                    currentPage: newPage,
+                    requestOptions: {
+                        page,
+                    },
                 },
             });
         });
@@ -225,7 +245,9 @@ describe('Incidents redux tests', () => {
             const localState = applyActions(reducers, state, actions);
 
             expect(localState).toEqual({
+                ...state,
                 incidents: {
+                    ...state.incidents,
                     error: { data: 'Request failed with status code 400', status: 400 },
                     requesting: false,
                 },

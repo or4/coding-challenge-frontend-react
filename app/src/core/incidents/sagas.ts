@@ -1,12 +1,13 @@
 import { takeEvery, put, call } from 'redux-saga/effects';
-import { api } from 'core/api';
 
-import { IncidentsActionType, IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from './actions';
+import { api } from 'core/api';
+import { defaultOptions } from 'core/incidents/contstants';
 import { IIncident, IIncidentDb } from 'types';
 import { isE2E } from 'utils/e2e';
+import { IncidentsActionType, IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from './actions';
 
-export function* incidents({ options }: IncidentsRequest) {
-    const result = yield call(api.get, '/incidents', options);
+export function* incidents({ options }: Partial<IncidentsRequest>) {
+    const result = yield call(api.get, '/incidents', { ...defaultOptions, ...options });
     const { data, status } = result;
 
     if (status !== 200) {
@@ -18,7 +19,7 @@ export function* incidents({ options }: IncidentsRequest) {
         window.e2e.responses.push(data);
     }
 
-    const { page, perPage } = options;
+    const { page, perPage } = options || {};
 
     yield put(new IncidentsRequestSuccess(transform(data.incidents), { page, perPage }));
 }

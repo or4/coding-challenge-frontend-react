@@ -14,7 +14,7 @@ describe('Check saga for IncidentsRequest', () => {
     const defaultOptions: IIncidentRequestOptions = {
         incidentType: 'theft',
         proximity: 'Berlin',
-        proximitySquare: 100,
+        proximitySquare: 50,
         perPage: 10,
         page: 1,
     };
@@ -25,25 +25,25 @@ describe('Check saga for IncidentsRequest', () => {
         });
 
         it('should proccess api call', () => {
-            const emptyOptions = {
+            const options = {
                 page: 1,
             };
-            const action = new IncidentsRequest(emptyOptions);
+            const action = new IncidentsRequest(options);
             const generator = cloneableGenerator(incidentsSaga)(action);
 
-            expect(generator.next().value).toEqual(call(api.get, '/incidents', emptyOptions));
+            expect(generator.next().value).toEqual(call(api.get, '/incidents', { ...defaultOptions, ...options }));
         });
     });
 
     describe('IncidentsRequestSuccess', () => {
         it('should return success action with empty data', () => {
-            const emptyOptions = {
+            const options = {
                 page: 1,
             };
-            const action = new IncidentsRequest(emptyOptions);
+            const action = new IncidentsRequest(options);
             const generator = cloneableGenerator(incidentsSaga)(action);
 
-            expect(generator.next().value).toEqual(call(api.get, '/incidents', emptyOptions));
+            expect(generator.next().value).toEqual(call(api.get, '/incidents', { ...defaultOptions, ...options }));
 
             const incidents: IIncident[] = [];
             const response = { data: { incidents }, status: 200 };
@@ -115,7 +115,7 @@ describe('Check saga for IncidentsRequest', () => {
             const action = new IncidentsRequest(options);
             const generator = cloneableGenerator(incidentsSaga)(action);
 
-            expect(generator.next().value).toEqual(call(api.get, '/incidents', options));
+            expect(generator.next().value).toEqual(call(api.get, '/incidents', { ...defaultOptions, ...options }));
 
             const incidents: IIncident[] = [];
             const response = { data: { incidents }, status: 200 };
@@ -133,7 +133,7 @@ describe('Check saga for IncidentsRequest', () => {
             const action = new IncidentsRequest(options);
             const generator = cloneableGenerator(incidentsSaga)(action);
 
-            expect(generator.next().value).toEqual(call(api.get, '/incidents', options));
+            expect(generator.next().value).toEqual(call(api.get, '/incidents', { ...defaultOptions, ...options }));
 
             const incidents: IIncident[] = [];
             const response = { data: { incidents }, status: 200 };

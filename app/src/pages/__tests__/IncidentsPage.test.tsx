@@ -126,7 +126,7 @@ describe('IncidentsPage', () => {
     describe('Check connected component', () => {
         describe('Loading', () => {
             it('should render', () => {
-                const initialState = { incidents: { incidents: [], requesting: true } };
+                const initialState = { incidents: { incidents: [], requestOptions: {}, requesting: true } };
                 const mockStore = configureMockStore();
                 const store = mockStore(initialState);
 
@@ -143,7 +143,7 @@ describe('IncidentsPage', () => {
             });
 
             it('should not render', () => {
-                const initialState = { incidents: { incidents: [], requesting: false } };
+                const initialState = { incidents: { incidents: [], requestOptions: {}, requesting: false } };
                 const mockStore = configureMockStore();
                 const store = mockStore(initialState);
 
@@ -190,7 +190,9 @@ describe('IncidentsPage', () => {
         describe('Paging', () => {
             it('should render', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
-                const initialState = { incidents: { incidents, requesting: false, currentPage: 1, totalIncidents: 1 } };
+                const initialState = {
+                    incidents: { incidents, requesting: false, requestOptions: { page: 1 }, totalIncidents: 1 },
+                };
                 const mockStore = configureMockStore();
                 const store = mockStore(initialState);
 
@@ -208,7 +210,7 @@ describe('IncidentsPage', () => {
 
             it('should not render', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
-                const initialState = { incidents: { incidents, requesting: false } };
+                const initialState = { incidents: { incidents, requesting: false, requestOptions: {} } };
                 const mockStore = configureMockStore();
                 const store = mockStore(initialState);
 
@@ -225,10 +227,16 @@ describe('IncidentsPage', () => {
             });
 
             it('should change page when click page button', () => {
+                const page = 2;
                 const incidents: IIncident[] = getFakeIncidents(3);
                 const changePage = jest.fn();
                 const container = mount(
-                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={changePage} />
+                    <IncidentsPage
+                        incidents={incidents}
+                        requestOptions={{ page: 1 }}
+                        totalPages={2}
+                        changePage={changePage}
+                    />
                 );
 
                 const wrapper = container.find(Pagination);
@@ -238,10 +246,10 @@ describe('IncidentsPage', () => {
 
                 const button = buttons.at(1);
 
-                expect(button.text()).toEqual('2');
+                expect(button.text()).toEqual(String(page));
                 button.simulate('click');
                 expect(changePage).toHaveBeenCalledTimes(1);
-                expect(changePage).toHaveBeenCalledWith(2);
+                expect(changePage).toHaveBeenCalledWith({ page });
             });
         });
 
@@ -251,7 +259,7 @@ describe('IncidentsPage', () => {
                 const wrapper = mount(
                     <IncidentsPage
                         incidents={incidents}
-                        currentPage={0}
+                        requestOptions={{ page: 0 }}
                         totalPages={0}
                         totalIncidents={0}
                         changePage={() => {}}
@@ -268,7 +276,12 @@ describe('IncidentsPage', () => {
             it('should exists', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
                 const wrapper = mount(
-                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                    <IncidentsPage
+                        incidents={incidents}
+                        requestOptions={{ page: 1 }}
+                        totalPages={2}
+                        changePage={() => {}}
+                    />
                 );
 
                 const container = wrapper.find(UpperPanel);
@@ -279,7 +292,12 @@ describe('IncidentsPage', () => {
             it('should have search incidents component', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
                 const wrapper = mount(
-                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                    <IncidentsPage
+                        incidents={incidents}
+                        requestOptions={{ page: 1 }}
+                        totalPages={2}
+                        changePage={() => {}}
+                    />
                 );
 
                 const container = wrapper.find(UpperPanel);
@@ -290,7 +308,12 @@ describe('IncidentsPage', () => {
             it('should have total incidents component', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
                 const wrapper = mount(
-                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                    <IncidentsPage
+                        incidents={incidents}
+                        requestOptions={{ page: 1 }}
+                        totalPages={2}
+                        changePage={() => {}}
+                    />
                 );
 
                 const container = wrapper.find(UpperPanel);
@@ -303,7 +326,7 @@ describe('IncidentsPage', () => {
                 const wrapper = mount(
                     <IncidentsPage
                         incidents={incidents}
-                        currentPage={1}
+                        requestOptions={{ page: 1 }}
                         totalPages={2}
                         totalIncidents={15}
                         changePage={() => {}}
@@ -330,7 +353,7 @@ describe('IncidentsPage', () => {
                 const wrapper = mount(
                     <IncidentsPage
                         incidents={incidents}
-                        currentPage={1}
+                        requestOptions={{ page: 1 }}
                         totalPages={2}
                         totalIncidents={15}
                         changePage={() => {}}
@@ -345,7 +368,12 @@ describe('IncidentsPage', () => {
             it('should not render', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
                 const wrapper = mount(
-                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                    <IncidentsPage
+                        incidents={incidents}
+                        requestOptions={{ page: 1 }}
+                        totalPages={2}
+                        changePage={() => {}}
+                    />
                 );
 
                 const container = wrapper.find(TotalIncidents);
@@ -359,7 +387,7 @@ describe('IncidentsPage', () => {
                 const wrapper = mount(
                     <IncidentsPage
                         incidents={incidents}
-                        currentPage={0}
+                        requestOptions={{ page: 0 }}
                         totalPages={0}
                         totalIncidents={0}
                         changePage={() => {}}
@@ -379,7 +407,12 @@ describe('IncidentsPage', () => {
             it('should exists', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
                 const wrapper = mount(
-                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                    <IncidentsPage
+                        incidents={incidents}
+                        requestOptions={{ page: 1 }}
+                        totalPages={2}
+                        changePage={() => {}}
+                    />
                 );
 
                 const container = wrapper.find(SearchIncidents);

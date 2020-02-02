@@ -10,9 +10,8 @@ import { EmptyResults } from 'components/incidents/EmptyResults';
 import { Pagination } from 'components/incidents/Pagination';
 import { selectTotalPages } from 'core/incidents/reducers';
 import { IAppState } from 'core/reducers';
-import { IIncident } from 'types';
+import { IIncident, IIncidentsModifiedRequestOptions } from 'types';
 import { IncidentsRequest } from 'core/incidents/actions';
-import { defaultOptions } from 'core/incidents/contstants';
 import { TotalIncidents } from 'components/incidents/TotalIncidents';
 import { SearchIncidents } from 'components/incidents/SearchIncidents';
 import { UpperPanel } from 'components/incidents/UpperPanel';
@@ -20,13 +19,13 @@ import { UpperPanel } from 'components/incidents/UpperPanel';
 export const Container = styled.div``;
 
 interface IDispatchProps {
-    changePage: (page: number) => void;
+    changePage: (options: IIncidentsModifiedRequestOptions) => void;
 }
 
 interface IProps {
     incidents: IIncident[];
     requesting?: boolean;
-    currentPage: number;
+    requestOptions: IIncidentsModifiedRequestOptions;
     totalPages: number;
     totalIncidents?: number;
     error?: object;
@@ -65,7 +64,7 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
         }
 
         const incidents = this.props.incidents || [];
-        const { currentPage, totalPages, totalIncidents, changePage } = this.props;
+        const { requestOptions, totalPages, totalIncidents } = this.props;
 
         return (
             <>
@@ -79,16 +78,26 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
                     ) : (
                         incidents.map((incident, index) => <Incident key={index} {...incident} />)
                     )}
-                    <Pagination currentPage={currentPage} totalPages={totalPages} onChange={changePage} />
+                    <Pagination
+                        currentPage={requestOptions.page || 0}
+                        totalPages={totalPages}
+                        onChange={this.onChangePage}
+                    />
                 </Container>
             </>
         );
     }
+
+    private onChangePage = (page: number) => {
+        const { changePage, requestOptions } = this.props;
+
+        changePage({ ...requestOptions, page });
+    };
 }
 
 const mapStateToProps = (state: IAppState) => {
     const {
-        incidents: { incidents = [], requesting, error, currentPage, totalIncidents },
+        incidents: { incidents = [], requesting, error, requestOptions, totalIncidents },
     } = state;
 
     const totalPages = selectTotalPages(state);
@@ -97,15 +106,15 @@ const mapStateToProps = (state: IAppState) => {
         incidents,
         requesting,
         error,
-        currentPage: currentPage || 0,
+        requestOptions,
         totalPages,
         totalIncidents,
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-    changePage: (page: number) => {
-        dispatch(new IncidentsRequest({ ...defaultOptions, page }));
+    changePage: (options: IIncidentsModifiedRequestOptions) => {
+        dispatch(new IncidentsRequest({ ...options }));
     },
 });
 

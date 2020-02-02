@@ -9,9 +9,9 @@ export enum IncidentsActionType {
 
 export class IncidentsRequest implements Action {
     public readonly type = IncidentsActionType.IncidentsRequest;
-    public options: IIncidentRequestOptions;
+    public options: Partial<IIncidentRequestOptions>;
 
-    public constructor(options: IIncidentRequestOptions) {
+    public constructor(options: Partial<IIncidentRequestOptions>) {
         this.options = options;
     }
 }

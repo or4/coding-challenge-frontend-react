@@ -1,4 +1,4 @@
-import { IIncident } from 'types';
+import { IIncident, IIncidentsModifiedRequestOptions } from 'types';
 import { IAppState } from 'core/reducers';
 
 import { IncidentsActionType, IncidentsActions } from './actions';
@@ -7,12 +7,14 @@ import { INCIDENTS_PER_PAGE, MAX_INCIDENTS_COUNT } from './contstants';
 export interface IIncidentsState {
     requesting?: boolean;
     incidents?: IIncident[];
-    currentPage?: number;
+    requestOptions: IIncidentsModifiedRequestOptions;
     totalIncidents?: number;
     error?: object;
 }
 
-export const initialState: IIncidentsState = {};
+export const initialState: IIncidentsState = {
+    requestOptions: {},
+};
 
 export const incidentsReducer = (state: IIncidentsState = initialState, action: IncidentsActions) => {
     switch (action.type) {
@@ -30,7 +32,12 @@ export const incidentsReducer = (state: IIncidentsState = initialState, action: 
                 return { ...state, totalIncidents: action.incidents.length };
             }
 
-            return { ...state, requesting: false, incidents: action.incidents, currentPage: page };
+            return {
+                ...state,
+                requesting: false,
+                incidents: action.incidents,
+                requestOptions: { ...state.requestOptions, page },
+            };
 
         case IncidentsActionType.IncidentsRequestFail:
             return { ...state, requesting: false, error: action.error };

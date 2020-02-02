@@ -9,7 +9,7 @@ import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Incidents reducer', () => {
     let state: IIncidentsState | undefined;
-    const initialState: IIncidentsState = {};
+    const initialState: IIncidentsState = { requestOptions: {} };
 
     describe('common', () => {
         it('should return init state', () => {
@@ -39,12 +39,14 @@ describe('Incidents reducer', () => {
                 page: 1,
             };
             expect(incidentsReducer(state, new IncidentsRequest(options))).toEqual({
+                ...initialState,
                 requesting: true,
             });
         });
 
         it('should return right state action with options', () => {
             expect(incidentsReducer(state, new IncidentsRequest(defaultOptions))).toEqual({
+                ...initialState,
                 requesting: true,
             });
         });
@@ -52,63 +54,81 @@ describe('Incidents reducer', () => {
 
     describe('IncidentsRequestSuccess', () => {
         it('should return right state with empty incidents', () => {
-            const currentPage = 1;
             state = {
+                ...initialState,
                 requesting: true,
             };
+            const page = 1;
             const incidents: IIncident[] = [];
 
             expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
+                ...state,
                 requesting: false,
                 incidents: [],
-                currentPage,
+                requestOptions: {
+                    page,
+                },
             });
         });
 
         it('should return right state with incidents', () => {
-            const currentPage = 1;
             state = {
+                ...initialState,
                 requesting: true,
             };
+            const page = 1;
             const incidents: IIncident[] = getFakeIncidents(3);
 
             expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
+                ...state,
                 requesting: false,
                 incidents,
-                currentPage,
+                requestOptions: {
+                    page,
+                },
             });
         });
 
         it('should return right state when currentPage is not defined', () => {
-            const currentPage = 1;
             state = {
+                ...initialState,
                 requesting: true,
             };
+            const page = 1;
             const incidents: IIncident[] = [];
 
             expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
+                ...state,
                 requesting: false,
                 incidents: [],
-                currentPage,
+                requestOptions: {
+                    page,
+                },
             });
         });
 
         it('should return state with currentPage equals 3', () => {
-            const currentPage = 3;
             state = {
+                ...initialState,
                 requesting: true,
             };
+            const page = 3;
             const incidents: IIncident[] = [];
 
-            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, { page: currentPage }))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, { page }))).toEqual({
+                ...state,
                 requesting: false,
                 incidents: [],
-                currentPage,
+                requestOptions: {
+                    page,
+                },
             });
         });
 
         it('should return state with totalIncidents', () => {
-            state = {};
+            state = {
+                ...initialState,
+            };
             const incidentsCount = 74;
             const incidents = getFakeIncidents(incidentsCount);
             const options = {
@@ -116,6 +136,7 @@ describe('Incidents reducer', () => {
             };
 
             expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, options))).toEqual({
+                ...state,
                 totalIncidents: incidentsCount,
             });
         });
@@ -124,11 +145,13 @@ describe('Incidents reducer', () => {
     describe('IncidentsRequestFail', () => {
         it('should return state with error', () => {
             state = {
+                ...initialState,
                 requesting: true,
             };
             const error = createHttpError(400, 'BadRequest');
 
             expect(incidentsReducer(state, new IncidentsRequestFail(error))).toEqual({
+                ...state,
                 requesting: false,
                 error,
             });
@@ -136,12 +159,14 @@ describe('Incidents reducer', () => {
 
         it('should work without error', () => {
             state = {
+                ...initialState,
                 requesting: true,
             };
             // @ts-ignore
             const error: object = undefined;
 
             expect(incidentsReducer(state, new IncidentsRequestFail(error))).toEqual({
+                ...state,
                 requesting: false,
             });
         });
@@ -151,6 +176,7 @@ describe('Incidents reducer', () => {
         it('should return 0 totalPages for 0 incidents', () => {
             const state = {
                 incidents: {
+                    ...initialState,
                     totalIncidents: 0,
                 },
             };
@@ -161,6 +187,7 @@ describe('Incidents reducer', () => {
         it('should return 1 totalPages for 1 incidents', () => {
             const state = {
                 incidents: {
+                    ...initialState,
                     totalIncidents: 1,
                 },
             };
@@ -171,6 +198,7 @@ describe('Incidents reducer', () => {
         it('should return 1 totalPages for 9 incidents', () => {
             const state = {
                 incidents: {
+                    ...initialState,
                     totalIncidents: 9,
                 },
             };
@@ -181,6 +209,7 @@ describe('Incidents reducer', () => {
         it('should return 2 totalPages for 11 incidents', () => {
             const state = {
                 incidents: {
+                    ...initialState,
                     totalIncidents: 11,
                 },
             };
