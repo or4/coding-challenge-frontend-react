@@ -10,16 +10,18 @@ import moxios from 'moxios';
 import { AppWithStore } from 'App';
 import { Error } from 'components/common/Error';
 import { Loading } from 'components/common/Loading';
+import { EmptyResults } from 'components/incidents/EmptyResults';
 import { Pagination } from 'components/incidents/Pagination';
 import { Button } from 'components/incidents/Pagination/style';
+import { SearchIncidents } from 'components/incidents/SearchIncidents';
+import { TotalIncidents } from 'components/incidents/TotalIncidents';
 import { api } from 'core/api';
 import { moxiosWait } from 'core/utils/moxiosWait';
 import { getFakeIncidents } from 'core/incidents/__mocks__/fakeIncidents';
 import { IIncident } from 'types';
 
 import { ConnectedIncidentsPage, IncidentsPage } from '../IncidentsPage';
-import { TotalIncidents } from 'components/incidents/TotalIncidents';
-import { EmptyResults } from 'components/incidents/EmptyResults';
+import { UpperPanel } from 'components/incidents/UpperPanel';
 
 describe('IncidentsPage', () => {
     describe('Check componennt with real store', () => {
@@ -262,6 +264,66 @@ describe('IncidentsPage', () => {
             });
         });
 
+        describe('UpperPanel', () => {
+            it('should exists', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const wrapper = mount(
+                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                );
+
+                const container = wrapper.find(UpperPanel);
+
+                expect(container).toHaveLength(1);
+            });
+
+            it('should have search incidents component', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const wrapper = mount(
+                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                );
+
+                const container = wrapper.find(UpperPanel);
+
+                expect(container.find(SearchIncidents)).toHaveLength(1);
+            });
+
+            it('should have total incidents component', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const wrapper = mount(
+                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                );
+
+                const container = wrapper.find(UpperPanel);
+
+                expect(container.find(TotalIncidents)).toHaveLength(1);
+            });
+
+            it('should have components in exact order', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const wrapper = mount(
+                    <IncidentsPage
+                        incidents={incidents}
+                        currentPage={1}
+                        totalPages={2}
+                        totalIncidents={15}
+                        changePage={() => {}}
+                    />
+                );
+
+                const container = wrapper.find(UpperPanel);
+
+                const html = container.html();
+
+                const searchIncidentsIndex = html.indexOf('data-test-id="search-incidents"');
+                const totalIncidentsIndex = html.indexOf('data-test-id="total-incidents"');
+
+                expect(searchIncidentsIndex).toBeGreaterThan(-1);
+                expect(totalIncidentsIndex).toBeGreaterThan(-1);
+
+                expect(searchIncidentsIndex < totalIncidentsIndex).toBeTruthy();
+            });
+        });
+
         describe('TotalIncidents', () => {
             it('should render', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
@@ -310,6 +372,19 @@ describe('IncidentsPage', () => {
                 const totalIncidentsContainer = wrapper.find(TotalIncidents);
                 expect(totalIncidentsContainer).toHaveLength(1);
                 expect(totalIncidentsContainer.text()).toEqual('Total: 0');
+            });
+        });
+
+        describe('SearchIncidents', () => {
+            it('should exists', () => {
+                const incidents: IIncident[] = getFakeIncidents(3);
+                const wrapper = mount(
+                    <IncidentsPage incidents={incidents} currentPage={1} totalPages={2} changePage={() => {}} />
+                );
+
+                const container = wrapper.find(SearchIncidents);
+
+                expect(container).toHaveLength(1);
             });
         });
     });

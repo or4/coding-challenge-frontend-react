@@ -14,6 +14,8 @@ import { IIncident } from 'types';
 import { IncidentsRequest } from 'core/incidents/actions';
 import { defaultOptions } from 'core/incidents/contstants';
 import { TotalIncidents } from 'components/incidents/TotalIncidents';
+import { SearchIncidents } from 'components/incidents/SearchIncidents';
+import { UpperPanel } from 'components/incidents/UpperPanel';
 
 export const Container = styled.div``;
 
@@ -30,10 +32,7 @@ interface IProps {
     error?: object;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IState {}
-
-export class IncidentsPage extends React.Component<IProps & IDispatchProps, IState> {
+export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
     public shouldComponentUpdate(nextProps: IProps) {
         if (nextProps) {
             if (nextProps.requesting !== this.props.requesting) {
@@ -70,7 +69,10 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps, ISta
 
         return (
             <>
-                <TotalIncidents value={totalIncidents} />
+                <UpperPanel>
+                    <SearchIncidents onChange={() => {}} text={''} />
+                    <TotalIncidents value={totalIncidents} />
+                </UpperPanel>
                 <Container data-test-id="incidents-list">
                     {incidents.length === 0 ? (
                         <EmptyResults />

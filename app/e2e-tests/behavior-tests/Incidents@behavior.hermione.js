@@ -222,7 +222,46 @@ describe('Behaviour. Incidents list', () => {
                 });
         });
     });
-    // describe('I want to filter reported bike thefts by partial case title.', () => {});
+
+    describe('I want to filter reported bike thefts by partial case title.', () => {
+        it('should work search by entered text', function() {
+            let prevTitle;
+
+            return this.browser
+                .url('/')
+                .execute(appStart)
+                .waitForVisible('[data-test-id="search-incidents"]', timeout)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+
+                    return firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+                })
+                .then(result => {
+                    prevTitle = result.value;
+                })
+                .execute(() => {
+                    const searchInput = document.body.querySelector('[data-test-id="search-incidents__input"]');
+                    const searchQuery = 'yellow';
+                    searchInput.value = searchQuery;
+
+                    const searchButton = document.body.querySelector('[data-test-id="search-incidents__button"]');
+                    searchButton.click();
+                })
+                .then(() => {})
+                .pause(2000)
+                .execute(() => {
+                    const firstIncident = document.body.querySelector('[data-test-id="incident"]');
+
+                    return firstIncident.querySelector('[data-test-id="incident__title"]').textContent;
+                })
+                .then(result => {
+                    assert.isOk(result.value !== prevTitle, 'Should be different incidents titles from after search');
+
+                    const searchQuery = 'yellow';
+                    assert.isOk(result.value.indexOf(searchQuery) !== -1, 'It should find text value');
+                });
+        });
+    });
     // describe('I want to filter reported bike thefts by date range.', () => {});
 });
 
