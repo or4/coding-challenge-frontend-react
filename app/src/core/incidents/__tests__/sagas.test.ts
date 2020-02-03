@@ -3,7 +3,7 @@ import { cloneableGenerator } from 'redux-saga/utils';
 import { isFunction } from 'lodash';
 
 import { api } from 'core/api';
-import { IIncidentRequestOptions, IIncident } from 'types';
+import { IIncidentsRequestOptions, IIncident } from 'types';
 
 import { incidents as incidentsSaga, transform } from '../sagas';
 import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
@@ -11,7 +11,7 @@ import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 import { MAX_INCIDENTS_COUNT } from '../contstants';
 
 describe('Check saga for IncidentsRequest', () => {
-    const defaultOptions: IIncidentRequestOptions = {
+    const defaultOptions: IIncidentsRequestOptions = {
         incidentType: 'theft',
         proximity: 'Berlin',
         proximitySquare: 50,

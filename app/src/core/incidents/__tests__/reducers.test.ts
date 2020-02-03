@@ -1,6 +1,6 @@
 import createHttpError from 'http-errors';
 import { promisify } from 'util';
-import { IIncidentRequestOptions, IIncident } from 'types';
+import { IIncidentsRequestOptions, IIncident } from 'types';
 
 import { incidentsReducer, IIncidentsState, selectTotalPages } from '../reducers';
 import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
@@ -35,7 +35,7 @@ describe('Incidents reducer', () => {
 
     describe('IncidentsRequest', () => {
         it('should return right state with empty options', () => {
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 page: 1,
             };
             expect(incidentsReducer(state, new IncidentsRequest(options))).toEqual({

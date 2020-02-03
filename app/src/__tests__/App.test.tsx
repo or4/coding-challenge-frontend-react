@@ -6,7 +6,7 @@ import { mount } from 'enzyme';
 import { IncidentsRequest } from 'core/incidents/actions';
 import { MAX_INCIDENTS_COUNT } from 'core/incidents/contstants';
 import { store } from 'core/store';
-import { IIncidentRequestOptions } from 'types';
+import { IIncidentsRequestOptions } from 'types';
 
 import { AppWithStore } from '../App';
 
@@ -35,7 +35,7 @@ describe('App', () => {
     });
 
     it('should dispatch IncidentsRequest with default options', () => {
-        const options: IIncidentRequestOptions = {
+        const options: IIncidentsRequestOptions = {
             incidentType: 'theft',
             proximity: 'Berlin',
             proximitySquare: 50,
@@ -52,7 +52,7 @@ describe('App', () => {
     });
 
     it('should dispatch IncidentsRequest with max count incidents options', () => {
-        const options: IIncidentRequestOptions = {
+        const options: IIncidentsRequestOptions = {
             incidentType: 'theft',
             proximity: 'Berlin',
             proximitySquare: 50,

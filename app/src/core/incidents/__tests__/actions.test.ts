@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { IIncidentRequestOptions, IIncident } from 'types';
+import { IIncidentsRequestOptions, IIncident } from 'types';
 
 import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
 import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
@@ -8,7 +8,7 @@ import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 describe('Check Incident actions', () => {
     describe('IncidentsRequest', () => {
         it('should create action with empty options', () => {
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 page: 1,
             };
 
@@ -19,7 +19,7 @@ describe('Check Incident actions', () => {
         });
 
         it('should create action for thefts in Berlin', () => {
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 100,
@@ -30,7 +30,7 @@ describe('Check Incident actions', () => {
         });
 
         it('should create action with incidentType option', () => {
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 incidentType: 'theft',
                 page: 1,
             };
@@ -39,7 +39,7 @@ describe('Check Incident actions', () => {
         });
 
         it('should create action with proximity and proximitySquare options', () => {
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 proximity: 'Berlin',
                 proximitySquare: 100,
                 page: 1,

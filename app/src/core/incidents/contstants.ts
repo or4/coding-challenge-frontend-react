@@ -1,8 +1,8 @@
-import { IIncidentRequestOptions } from 'types';
+import { IIncidentsRequestOptions } from 'types';
 
 export const INCIDENTS_PER_PAGE = 10;
 
-export const defaultOptions: IIncidentRequestOptions = {
+export const defaultOptions: IIncidentsRequestOptions = {
     incidentType: 'theft',
     proximity: 'Berlin',
     proximitySquare: 50,
@@ -11,7 +11,7 @@ export const defaultOptions: IIncidentRequestOptions = {
 };
 
 export const MAX_INCIDENTS_COUNT = 10000;
-export const maxIncidentsCountOptions: IIncidentRequestOptions = {
+export const maxIncidentsCountOptions: IIncidentsRequestOptions = {
     ...defaultOptions,
     perPage: MAX_INCIDENTS_COUNT,
 };

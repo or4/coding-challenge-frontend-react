@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { IIncidentRequestOptions, IIncident, IIncidentSuccessRequestOptions } from 'types';
+import { IIncidentsRequestOptions, IIncident, IIncidentSuccessRequestOptions } from 'types';
 
 export enum IncidentsActionType {
     IncidentsRequest = 'Incidents/incidents request',
@@ -9,9 +9,9 @@ export enum IncidentsActionType {
 
 export class IncidentsRequest implements Action {
     public readonly type = IncidentsActionType.IncidentsRequest;
-    public options: Partial<IIncidentRequestOptions>;
+    public options: Partial<IIncidentsRequestOptions>;
 
-    public constructor(options: Partial<IIncidentRequestOptions>) {
+    public constructor(options: Partial<IIncidentsRequestOptions>) {
         this.options = options;
     }
 }

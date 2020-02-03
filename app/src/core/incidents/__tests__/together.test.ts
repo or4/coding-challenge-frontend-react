@@ -9,7 +9,7 @@ import { sagas } from 'core/sagas';
 import { actionToPlainObject } from 'core/store';
 import { applyActions } from 'core/utils/applyActions';
 import { moxiosWait } from 'core/utils/moxiosWait';
-import { IIncident, IIncidentRequestOptions } from 'types';
+import { IIncident, IIncidentsRequestOptions } from 'types';
 
 import { IncidentsRequestSuccess, IncidentsRequest, IncidentsRequestFail } from '../actions';
 import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
@@ -45,7 +45,7 @@ describe('Incidents redux tests', () => {
             const incidents: IIncident[] = [];
             const page = 1;
 
-            const options: IIncidentRequestOptions = { page };
+            const options: IIncidentsRequestOptions = { page };
             store.dispatch(new IncidentsRequest(options));
 
             await moxiosWait();
@@ -112,7 +112,7 @@ describe('Incidents redux tests', () => {
             const incidents: IIncident[] = [];
             const page = 3;
 
-            const options: IIncidentRequestOptions = { page };
+            const options: IIncidentsRequestOptions = { page };
             store.dispatch(new IncidentsRequest(options));
 
             await moxiosWait();
@@ -148,7 +148,7 @@ describe('Incidents redux tests', () => {
             const incidents: IIncident[] = getFakeIncidents(totalIncidents);
             const page = 1;
 
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 50,
@@ -186,7 +186,7 @@ describe('Incidents redux tests', () => {
             const incidents: IIncident[] = getFakeIncidents(totalIncidents);
             const page = 2;
 
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 incidentType: 'theft',
                 proximity: 'Berlin',
                 proximitySquare: 50,
@@ -224,7 +224,7 @@ describe('Incidents redux tests', () => {
         });
 
         it('should not work with error', async () => {
-            const options: IIncidentRequestOptions = {
+            const options: IIncidentsRequestOptions = {
                 proximity: 'unexpected_proximity',
                 page: 1,
             };
