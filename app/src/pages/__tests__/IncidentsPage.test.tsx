@@ -6,6 +6,7 @@ import { AxiosInstance } from 'axios';
 import { mount } from 'enzyme';
 import configureMockStore from 'redux-mock-store';
 import moxios from 'moxios';
+import { noop } from 'lodash';
 
 import { AppWithStore } from 'App';
 import { Error } from 'components/common/Error';
@@ -229,13 +230,13 @@ describe('IncidentsPage', () => {
             it('should change page when click page button', () => {
                 const page = 2;
                 const incidents: IIncident[] = getFakeIncidents(3);
-                const changePage = jest.fn();
+                const makeRequest = jest.fn();
                 const container = mount(
                     <IncidentsPage
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        changePage={changePage}
+                        makeRequest={makeRequest}
                     />
                 );
 
@@ -248,8 +249,8 @@ describe('IncidentsPage', () => {
 
                 expect(button.text()).toEqual(String(page));
                 button.simulate('click');
-                expect(changePage).toHaveBeenCalledTimes(1);
-                expect(changePage).toHaveBeenCalledWith({ page });
+                expect(makeRequest).toHaveBeenCalledTimes(1);
+                expect(makeRequest).toHaveBeenCalledWith({ page });
             });
         });
 
@@ -262,7 +263,7 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 0 }}
                         totalPages={0}
                         totalIncidents={0}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -280,7 +281,7 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -296,7 +297,7 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -312,7 +313,7 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -329,7 +330,7 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 1 }}
                         totalPages={2}
                         totalIncidents={15}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -356,7 +357,7 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 1 }}
                         totalPages={2}
                         totalIncidents={15}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -372,7 +373,7 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -390,7 +391,7 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 0 }}
                         totalPages={0}
                         totalIncidents={0}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 
@@ -411,7 +412,7 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        changePage={() => {}}
+                        makeRequest={noop}
                     />
                 );
 

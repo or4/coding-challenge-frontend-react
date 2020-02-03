@@ -19,7 +19,7 @@ import { UpperPanel } from 'components/incidents/UpperPanel';
 export const Container = styled.div``;
 
 interface IDispatchProps {
-    changePage: (options: IIncidentsModifiedRequestOptions) => void;
+    makeRequest: (options: IIncidentsModifiedRequestOptions) => void;
 }
 
 interface IProps {
@@ -89,9 +89,9 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
     }
 
     private onChangePage = (page: number) => {
-        const { changePage, requestOptions } = this.props;
+        const { makeRequest, requestOptions } = this.props;
 
-        changePage({ ...requestOptions, page });
+        makeRequest({ ...requestOptions, page });
     };
 }
 
@@ -113,7 +113,7 @@ const mapStateToProps = (state: IAppState) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-    changePage: (options: IIncidentsModifiedRequestOptions) => {
+    makeRequest: (options: IIncidentsModifiedRequestOptions) => {
         dispatch(new IncidentsRequest({ ...options }));
     },
 });

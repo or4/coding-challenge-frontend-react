@@ -181,7 +181,7 @@ describe('Incidents redux tests', () => {
             });
         });
 
-        it('should changePage', async () => {
+        it('should change page', async () => {
             const totalIncidents = 74;
             const incidents: IIncident[] = getFakeIncidents(totalIncidents);
             const page = 2;
