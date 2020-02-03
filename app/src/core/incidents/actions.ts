@@ -5,13 +5,15 @@ export enum IncidentsActionType {
     IncidentsRequest = 'Incidents/incidents request',
     IncidentsRequestSuccess = 'Incidents/incidents request success',
     IncidentsRequestFail = 'Incidents/incidents request fail',
+    IncidentsCountRequest = 'Incidents/incidents count request',
+    IncidentsCountRequestSuccess = 'Incidents/incidents count request success',
 }
 
 export class IncidentsRequest implements Action {
     public readonly type = IncidentsActionType.IncidentsRequest;
     public options: Partial<IIncidentsRequestOptions>;
 
-    public constructor(options: Partial<IIncidentsRequestOptions>) {
+    public constructor(options: Partial<IIncidentsRequestOptions> = {}) {
         this.options = options;
     }
 }
@@ -36,4 +38,27 @@ export class IncidentsRequestFail implements Action {
     }
 }
 
-export type IncidentsActions = IncidentsRequest | IncidentsRequestSuccess | IncidentsRequestFail;
+export class IncidentsCountRequest implements Action {
+    public readonly type = IncidentsActionType.IncidentsCountRequest;
+    public options: Partial<IIncidentsRequestOptions>;
+
+    public constructor(options: Partial<IIncidentsRequestOptions> = {}) {
+        this.options = options;
+    }
+}
+
+export class IncidentsCountRequestSuccess implements Action {
+    public readonly type = IncidentsActionType.IncidentsCountRequestSuccess;
+    public countIncidents: number;
+
+    public constructor(countIncidents: number) {
+        this.countIncidents = countIncidents;
+    }
+}
+
+export type IncidentsActions =
+    | IncidentsRequest
+    | IncidentsRequestSuccess
+    | IncidentsRequestFail
+    | IncidentsCountRequest
+    | IncidentsCountRequestSuccess;

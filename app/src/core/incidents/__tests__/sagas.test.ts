@@ -5,20 +5,26 @@ import { isFunction } from 'lodash';
 import { api } from 'core/api';
 import { IIncidentsRequestOptions, IIncident } from 'types';
 
-import { incidents as incidentsSaga, transform } from '../sagas';
-import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
+import { incidents as incidentsSaga, incidentsCount as incidentsCountSaga, transform } from '../sagas';
+import {
+    IncidentsRequest,
+    IncidentsRequestSuccess,
+    IncidentsRequestFail,
+    IncidentsCountRequestSuccess,
+    IncidentsCountRequest,
+} from '../actions';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 import { MAX_INCIDENTS_COUNT } from '../contstants';
 
-describe('Check saga for IncidentsRequest', () => {
-    const defaultOptions: IIncidentsRequestOptions = {
-        incidentType: 'theft',
-        proximity: 'Berlin',
-        proximitySquare: 50,
-        perPage: 10,
-        page: 1,
-    };
+const defaultOptions: IIncidentsRequestOptions = {
+    incidentType: 'theft',
+    proximity: 'Berlin',
+    proximitySquare: 50,
+    perPage: 10,
+    page: 1,
+};
 
+describe('IncidentsRequest', () => {
     describe('common', () => {
         it('should exists', () => {
             expect(isFunction(incidentsSaga)).toBe(true);
@@ -62,7 +68,7 @@ describe('Check saga for IncidentsRequest', () => {
             const response = { data: { incidents }, status: 200 };
             // @ts-ignore
             expect(generator.next(response).value).toEqual(
-                put(new IncidentsRequestSuccess(transform(incidents), { page: 1, perPage: 10 }))
+                put(new IncidentsRequestSuccess(transform(incidents), { page: 1 }))
             );
             expect(generator.next().done).toEqual(true);
         });
@@ -77,7 +83,7 @@ describe('Check saga for IncidentsRequest', () => {
             const response = { data: { incidents }, status: 200 };
             // @ts-ignore
             expect(generator.next(response).value).toEqual(
-                put(new IncidentsRequestSuccess(transform(incidents), { page: 1, perPage: 10 }))
+                put(new IncidentsRequestSuccess(transform(incidents), { page: 1 }))
             );
             expect(generator.next().done).toEqual(true);
         });
@@ -101,9 +107,7 @@ describe('Check saga for IncidentsRequest', () => {
             }));
 
             // @ts-ignore
-            expect(generator.next(response).value).toEqual(
-                put(new IncidentsRequestSuccess(expected, { page: 1, perPage: 10 }))
-            );
+            expect(generator.next(response).value).toEqual(put(new IncidentsRequestSuccess(expected, { page: 1 })));
             expect(generator.next().done).toEqual(true);
         });
 
@@ -123,26 +127,6 @@ describe('Check saga for IncidentsRequest', () => {
             expect(generator.next(response).value).toEqual(put(new IncidentsRequestSuccess(incidents, { page })));
             expect(generator.next().done).toEqual(true);
         });
-
-        it('should return success action with perPage', () => {
-            const page = 1;
-            const options = {
-                page,
-                perPage: MAX_INCIDENTS_COUNT,
-            };
-            const action = new IncidentsRequest(options);
-            const generator = cloneableGenerator(incidentsSaga)(action);
-
-            expect(generator.next().value).toEqual(call(api.get, '/incidents', { ...defaultOptions, ...options }));
-
-            const incidents: IIncident[] = [];
-            const response = { data: { incidents }, status: 200 };
-            // @ts-ignore
-            expect(generator.next(response).value).toEqual(
-                put(new IncidentsRequestSuccess(incidents, { page, perPage: MAX_INCIDENTS_COUNT }))
-            );
-            expect(generator.next().done).toEqual(true);
-        });
     });
 
     describe('IncidentsRequestFail', () => {
@@ -157,5 +141,39 @@ describe('Check saga for IncidentsRequest', () => {
             expect(generator.next(response).value).toEqual(put(new IncidentsRequestFail(response)));
             expect(generator.next().done).toEqual(true);
         });
+    });
+});
+
+describe('IncidentsCountRequest', () => {
+    it('should return success action with empty data', () => {
+        const options = {};
+        const action = new IncidentsCountRequest(options);
+        const generator = cloneableGenerator(incidentsCountSaga)(action);
+
+        expect(generator.next().value).toEqual(
+            call(api.get, '/incidents', { ...defaultOptions, ...options, perPage: MAX_INCIDENTS_COUNT })
+        );
+
+        const incidents: IIncident[] = [];
+        const response = { data: { incidents }, status: 200 };
+        // @ts-ignore
+        expect(generator.next(response).value).toEqual(put(new IncidentsCountRequestSuccess(incidents.length)));
+        expect(generator.next().done).toEqual(true);
+    });
+
+    it('should return success action with options and incidents', () => {
+        const options = { proximity: 'London' };
+        const action = new IncidentsCountRequest(options);
+        const generator = cloneableGenerator(incidentsCountSaga)(action);
+
+        expect(generator.next().value).toEqual(
+            call(api.get, '/incidents', { ...defaultOptions, ...options, perPage: MAX_INCIDENTS_COUNT })
+        );
+
+        const incidents: IIncident[] = getFakeIncidents(30);
+        const response = { data: { incidents }, status: 200 };
+        // @ts-ignore
+        expect(generator.next(response).value).toEqual(put(new IncidentsCountRequestSuccess(incidents.length)));
+        expect(generator.next().done).toEqual(true);
     });
 });

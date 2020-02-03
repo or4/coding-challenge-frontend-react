@@ -11,8 +11,14 @@ import { applyActions } from 'core/utils/applyActions';
 import { moxiosWait } from 'core/utils/moxiosWait';
 import { IIncident, IIncidentsRequestOptions } from 'types';
 
-import { IncidentsRequestSuccess, IncidentsRequest, IncidentsRequestFail } from '../actions';
-import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
+import {
+    IncidentsRequestSuccess,
+    IncidentsRequest,
+    IncidentsRequestFail,
+    IncidentsCountRequest,
+    IncidentsCountRequestSuccess,
+} from '../actions';
+import { defaultOptions } from '../contstants';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 import { transform } from '../sagas';
 import { IIncidentsState } from '../reducers';
@@ -50,7 +56,7 @@ describe('Incidents redux tests', () => {
 
             await moxiosWait();
 
-            let request = moxios.requests.mostRecent();
+            let request = moxios.requests.at(0);
             await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
             const actions = store.getActions();
@@ -82,7 +88,7 @@ describe('Incidents redux tests', () => {
 
             await moxiosWait();
 
-            let request = moxios.requests.mostRecent();
+            let request = moxios.requests.at(0);
             await request.respondWith({ status: 200, response: { incidents } });
 
             const actions = store.getActions();
@@ -90,7 +96,7 @@ describe('Incidents redux tests', () => {
 
             expect(actions).toEqual([
                 new IncidentsRequest(defaultOptions),
-                new IncidentsRequestSuccess(incidentsExpected, { page, perPage: 10 }),
+                new IncidentsRequestSuccess(incidentsExpected, { page }),
             ]);
 
             const localState = applyActions(reducers, state, actions);
@@ -117,7 +123,7 @@ describe('Incidents redux tests', () => {
 
             await moxiosWait();
 
-            let request = moxios.requests.mostRecent();
+            let request = moxios.requests.at(0);
             await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
             const actions = store.getActions();
@@ -143,44 +149,6 @@ describe('Incidents redux tests', () => {
             });
         });
 
-        it('should return state with totalIncidents', async () => {
-            const totalIncidents = 74;
-            const incidents: IIncident[] = getFakeIncidents(totalIncidents);
-            const page = 1;
-
-            const options: IIncidentsRequestOptions = {
-                incidentType: 'theft',
-                proximity: 'Berlin',
-                proximitySquare: 50,
-                page,
-                perPage: MAX_INCIDENTS_COUNT,
-            };
-            store.dispatch(new IncidentsRequest(options));
-
-            await moxiosWait();
-
-            let request = moxios.requests.mostRecent();
-            await request.respondWith({ status: 200, response: { status: 200, incidents } });
-
-            const actions = store.getActions();
-            const incidentsExpected = transform(incidents);
-
-            expect(actions).toEqual([
-                new IncidentsRequest(options),
-                new IncidentsRequestSuccess(incidentsExpected, { page, perPage: MAX_INCIDENTS_COUNT }),
-            ]);
-
-            const localState = applyActions(reducers, state, actions);
-
-            expect(localState).toEqual({
-                ...state,
-                incidents: {
-                    ...state.incidents,
-                    totalIncidents,
-                },
-            });
-        });
-
         it('should change page', async () => {
             const totalIncidents = 74;
             const incidents: IIncident[] = getFakeIncidents(totalIncidents);
@@ -197,7 +165,7 @@ describe('Incidents redux tests', () => {
 
             await moxiosWait();
 
-            let request = moxios.requests.mostRecent();
+            let request = moxios.requests.at(0);
             await request.respondWith({ status: 200, response: { status: 200, incidents } });
 
             const actions = store.getActions();
@@ -205,7 +173,7 @@ describe('Incidents redux tests', () => {
 
             expect(actions).toEqual([
                 new IncidentsRequest(options),
-                new IncidentsRequestSuccess(incidentsExpected, { page, perPage: 10 }),
+                new IncidentsRequestSuccess(incidentsExpected, { page }),
             ]);
 
             const localState = applyActions(reducers, state, actions);
@@ -233,7 +201,7 @@ describe('Incidents redux tests', () => {
 
             await moxiosWait();
 
-            let request = moxios.requests.mostRecent();
+            let request = moxios.requests.at(0);
             await request.respondWith({ status: 400, responseText: 'Request failed with status code 400' });
 
             const actions = store.getActions();
@@ -250,6 +218,38 @@ describe('Incidents redux tests', () => {
                     ...state.incidents,
                     error: { data: 'Request failed with status code 400', status: 400 },
                     requesting: false,
+                },
+            });
+        });
+    });
+
+    describe('IncidentsCountRequest', () => {
+        let state: IAppState;
+        let store: MockStoreEnhanced<unknown, {}>;
+        const initialState: IIncidentsState = { requestOptions: {} };
+
+        beforeEach(() => {
+            state = { incidents: { ...initialState } };
+            store = mockStore(state);
+            sagaMiddleware.run(sagas);
+        });
+
+        it('should return state with totalIncidents', async () => {
+            const totalIncidents = 74;
+            const incidents: IIncident[] = getFakeIncidents(totalIncidents);
+            store.dispatch(new IncidentsCountRequest());
+            await moxiosWait();
+            let request = moxios.requests.at(0);
+            await request.respondWith({ status: 200, response: { status: 200, incidents } });
+            const actions = store.getActions();
+
+            expect(actions).toEqual([new IncidentsCountRequest(), new IncidentsCountRequestSuccess(totalIncidents)]);
+            const localState = applyActions(reducers, state, actions);
+            expect(localState).toEqual({
+                ...state,
+                incidents: {
+                    ...state.incidents,
+                    totalIncidents,
                 },
             });
         });

@@ -11,7 +11,7 @@ import { Pagination } from 'components/incidents/Pagination';
 import { selectTotalPages } from 'core/incidents/reducers';
 import { IAppState } from 'core/reducers';
 import { IIncident, IIncidentsModifiedRequestOptions } from 'types';
-import { IncidentsRequest } from 'core/incidents/actions';
+import { IncidentsRequest, IncidentsCountRequest } from 'core/incidents/actions';
 import { TotalIncidents } from 'components/incidents/TotalIncidents';
 import { SearchIncidents } from 'components/incidents/SearchIncidents';
 import { UpperPanel } from 'components/incidents/UpperPanel';
@@ -19,7 +19,8 @@ import { UpperPanel } from 'components/incidents/UpperPanel';
 export const Container = styled.div``;
 
 interface IDispatchProps {
-    makeRequest: (options: IIncidentsModifiedRequestOptions) => void;
+    makeIncidentsRequest: (options: IIncidentsModifiedRequestOptions) => void;
+    makeIncidentsCountRequest: (options: IIncidentsModifiedRequestOptions) => void;
 }
 
 interface IProps {
@@ -89,9 +90,10 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
     }
 
     private onChangePage = (page: number) => {
-        const { makeRequest, requestOptions } = this.props;
+        const { makeIncidentsRequest, makeIncidentsCountRequest, requestOptions } = this.props;
 
-        makeRequest({ ...requestOptions, page });
+        makeIncidentsRequest({ ...requestOptions, page });
+        makeIncidentsCountRequest({ ...requestOptions });
     };
 }
 
@@ -113,8 +115,11 @@ const mapStateToProps = (state: IAppState) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>) => ({
-    makeRequest: (options: IIncidentsModifiedRequestOptions) => {
+    makeIncidentsRequest: (options: IIncidentsModifiedRequestOptions) => {
         dispatch(new IncidentsRequest({ ...options }));
+    },
+    makeIncidentsCountRequest: (options: IIncidentsModifiedRequestOptions) => {
+        dispatch(new IncidentsCountRequest({ ...options }));
     },
 });
 

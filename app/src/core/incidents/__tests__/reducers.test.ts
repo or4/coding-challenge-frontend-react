@@ -3,8 +3,14 @@ import { promisify } from 'util';
 import { IIncidentsRequestOptions, IIncident } from 'types';
 
 import { incidentsReducer, IIncidentsState, selectTotalPages } from '../reducers';
-import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
-import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
+import {
+    IncidentsRequest,
+    IncidentsRequestSuccess,
+    IncidentsRequestFail,
+    IncidentsCountRequest,
+    IncidentsCountRequestSuccess,
+} from '../actions';
+import { defaultOptions } from '../contstants';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Incidents reducer', () => {
@@ -124,22 +130,6 @@ describe('Incidents reducer', () => {
                 },
             });
         });
-
-        it('should return state with totalIncidents', () => {
-            state = {
-                ...initialState,
-            };
-            const incidentsCount = 74;
-            const incidents = getFakeIncidents(incidentsCount);
-            const options = {
-                perPage: MAX_INCIDENTS_COUNT,
-            };
-
-            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, options))).toEqual({
-                ...state,
-                totalIncidents: incidentsCount,
-            });
-        });
     });
 
     describe('IncidentsRequestFail', () => {
@@ -168,6 +158,39 @@ describe('Incidents reducer', () => {
             expect(incidentsReducer(state, new IncidentsRequestFail(error))).toEqual({
                 ...state,
                 requesting: false,
+            });
+        });
+    });
+
+    describe('IncidentsCountRequest', () => {
+        it('should return state without changes', () => {
+            const options = {};
+            expect(incidentsReducer(state, new IncidentsCountRequest(options))).toEqual(state);
+        });
+    });
+
+    describe('IncidentsCountRequestSuccess', () => {
+        it('should return right state with empty incidents', () => {
+            state = {
+                ...initialState,
+            };
+            const incidents: IIncident[] = [];
+
+            expect(incidentsReducer(state, new IncidentsCountRequestSuccess(incidents.length))).toEqual({
+                ...state,
+                totalIncidents: incidents.length,
+            });
+        });
+
+        it('should return right state with incidents', () => {
+            state = {
+                ...initialState,
+            };
+            const incidents: IIncident[] = getFakeIncidents(31);
+
+            expect(incidentsReducer(state, new IncidentsCountRequestSuccess(incidents.length))).toEqual({
+                ...state,
+                totalIncidents: incidents.length,
             });
         });
     });

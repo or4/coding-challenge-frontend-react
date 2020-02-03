@@ -16,7 +16,6 @@ export interface IIncidentsModifiedRequestOptions {
 
 export interface IIncidentSuccessRequestOptions {
     page?: number;
-    perPage?: number;
 }
 
 export interface IIncident {

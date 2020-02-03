@@ -1,8 +1,14 @@
 import createHttpError from 'http-errors';
 import { IIncidentsRequestOptions, IIncident } from 'types';
 
-import { IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from '../actions';
-import { defaultOptions, MAX_INCIDENTS_COUNT } from '../contstants';
+import {
+    IncidentsRequest,
+    IncidentsRequestSuccess,
+    IncidentsRequestFail,
+    IncidentsCountRequest,
+    IncidentsCountRequestSuccess,
+} from '../actions';
+import { defaultOptions } from '../contstants';
 import { getFakeIncidents } from '../__mocks__/fakeIncidents';
 
 describe('Check Incident actions', () => {
@@ -116,18 +122,6 @@ describe('Check Incident actions', () => {
                 options: { page },
             });
         });
-
-        it('should create action with perPage value', () => {
-            const page = 1;
-            const perPage = MAX_INCIDENTS_COUNT;
-            const incidents: IIncident[] = [];
-
-            expect(new IncidentsRequestSuccess(incidents, { page, perPage })).toEqual({
-                type: 'Incidents/incidents request success',
-                incidents,
-                options: { page, perPage },
-            });
-        });
     });
 
     describe('IncidentsRequestFail', () => {
@@ -142,6 +136,28 @@ describe('Check Incident actions', () => {
             const error: object = undefined;
 
             expect(new IncidentsRequestFail(error)).toEqual({ type: 'Incidents/incidents request fail', error });
+        });
+    });
+
+    describe('IncidentsCountRequest', () => {
+        it('should match object', () => {
+            const options = {};
+
+            expect(new IncidentsCountRequest(options)).toEqual({
+                type: 'Incidents/incidents count request',
+                options,
+            });
+        });
+    });
+
+    describe('IncidentsCountRequestSuccess', () => {
+        it('should match object', () => {
+            const countIncidents = 100;
+
+            expect(new IncidentsCountRequestSuccess(countIncidents)).toEqual({
+                type: 'Incidents/incidents count request success',
+                countIncidents,
+            });
         });
     });
 });

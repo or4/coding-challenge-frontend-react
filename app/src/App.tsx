@@ -3,14 +3,13 @@ import { Provider } from 'react-redux';
 
 import { Layout } from 'components/common/Layout';
 import { store } from 'core/store';
-import { IncidentsRequest } from 'core/incidents/actions';
-import { defaultOptions, maxIncidentsCountOptions } from 'core/incidents/contstants';
+import { IncidentsRequest, IncidentsCountRequest } from 'core/incidents/actions';
 import { ConnectedIncidentsPage } from 'pages/IncidentsPage';
 
 export class AppWithStore extends React.Component {
     public componentDidMount() {
-        store.dispatch(new IncidentsRequest(defaultOptions));
-        store.dispatch(new IncidentsRequest(maxIncidentsCountOptions));
+        store.dispatch(new IncidentsRequest());
+        store.dispatch(new IncidentsCountRequest());
     }
 
     public render() {

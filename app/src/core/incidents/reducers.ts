@@ -26,11 +26,7 @@ export const incidentsReducer = (state: IIncidentsState = initialState, action: 
             return { ...state, requesting: true };
 
         case IncidentsActionType.IncidentsRequestSuccess:
-            const { page, perPage } = action.options;
-
-            if (perPage === MAX_INCIDENTS_COUNT) {
-                return { ...state, totalIncidents: action.incidents.length };
-            }
+            const { page } = action.options;
 
             return {
                 ...state,
@@ -41,6 +37,9 @@ export const incidentsReducer = (state: IIncidentsState = initialState, action: 
 
         case IncidentsActionType.IncidentsRequestFail:
             return { ...state, requesting: false, error: action.error };
+
+        case IncidentsActionType.IncidentsCountRequestSuccess:
+            return { ...state, totalIncidents: action.countIncidents };
 
         default:
             return state;

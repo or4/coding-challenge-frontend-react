@@ -1,12 +1,20 @@
 import { takeEvery, put, call } from 'redux-saga/effects';
+import { isArray } from 'lodash';
 
 import { api } from 'core/api';
-import { defaultOptions } from 'core/incidents/contstants';
+import { defaultOptions, MAX_INCIDENTS_COUNT } from 'core/incidents/contstants';
 import { IIncident, IIncidentDb } from 'types';
 import { isE2E } from 'utils/e2e';
-import { IncidentsActionType, IncidentsRequest, IncidentsRequestSuccess, IncidentsRequestFail } from './actions';
+import {
+    IncidentsActionType,
+    IncidentsRequest,
+    IncidentsRequestSuccess,
+    IncidentsRequestFail,
+    IncidentsCountRequestSuccess,
+    IncidentsCountRequest,
+} from './actions';
 
-export function* incidents({ options }: Partial<IncidentsRequest>) {
+export function* incidents({ options }: IncidentsRequest) {
     const result = yield call(api.get, '/incidents', { ...defaultOptions, ...options });
     const { data, status } = result;
 
@@ -19,9 +27,9 @@ export function* incidents({ options }: Partial<IncidentsRequest>) {
         window.e2e.responses.push(data);
     }
 
-    const { page, perPage } = options || {};
+    const { page } = options;
 
-    yield put(new IncidentsRequestSuccess(transform(data.incidents), { page, perPage }));
+    yield put(new IncidentsRequestSuccess(transform(data.incidents), { page }));
 }
 
 // pick only necessary incident props
@@ -35,5 +43,18 @@ export const transform: (incidents: IIncidentDb[]) => IIncident[] = incidents =>
         occurredAt,
     }));
 
-// takeEvery is specially chosen for monitoring request count
-export default [takeEvery(IncidentsActionType.IncidentsRequest, incidents)];
+export function* incidentsCount({ options }: IncidentsCountRequest) {
+    const result = yield call(api.get, '/incidents', { ...defaultOptions, ...options, perPage: MAX_INCIDENTS_COUNT });
+    const { data, status } = result;
+
+    if (status === 200) {
+        const incidentsCount: number = isArray(data.incidents) ? data.incidents.length : 0;
+
+        yield put(new IncidentsCountRequestSuccess(incidentsCount));
+    }
+}
+
+export default [
+    takeEvery(IncidentsActionType.IncidentsRequest, incidents),
+    takeEvery(IncidentsActionType.IncidentsCountRequest, incidentsCount),
+];

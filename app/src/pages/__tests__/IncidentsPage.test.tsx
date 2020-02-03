@@ -107,7 +107,7 @@ describe('IncidentsPage', () => {
             const loadingContainer = root.querySelectorAll('[data-test-id="loading"]');
             expect(loadingContainer).toHaveLength(1);
 
-            let request = moxios.requests.mostRecent();
+            let request = moxios.requests.at(0);
             await request.respondWith({
                 status: 400,
                 response: {
@@ -230,13 +230,15 @@ describe('IncidentsPage', () => {
             it('should change page when click page button', () => {
                 const page = 2;
                 const incidents: IIncident[] = getFakeIncidents(3);
-                const makeRequest = jest.fn();
+                const makeIncidentsRequest = jest.fn();
+                const makeIncidentsCountRequest = jest.fn();
                 const container = mount(
                     <IncidentsPage
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        makeRequest={makeRequest}
+                        makeIncidentsRequest={makeIncidentsRequest}
+                        makeIncidentsCountRequest={makeIncidentsCountRequest}
                     />
                 );
 
@@ -249,8 +251,11 @@ describe('IncidentsPage', () => {
 
                 expect(button.text()).toEqual(String(page));
                 button.simulate('click');
-                expect(makeRequest).toHaveBeenCalledTimes(1);
-                expect(makeRequest).toHaveBeenCalledWith({ page });
+                expect(makeIncidentsRequest).toHaveBeenCalledTimes(1);
+                expect(makeIncidentsRequest).toHaveBeenCalledWith({ page });
+
+                expect(makeIncidentsCountRequest).toHaveBeenCalledTimes(1);
+                expect(makeIncidentsCountRequest).toHaveBeenCalledWith({ page: 1 });
             });
         });
 
@@ -263,7 +268,8 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 0 }}
                         totalPages={0}
                         totalIncidents={0}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -281,7 +287,8 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -297,7 +304,8 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -313,7 +321,8 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -330,7 +339,8 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 1 }}
                         totalPages={2}
                         totalIncidents={15}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -357,7 +367,8 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 1 }}
                         totalPages={2}
                         totalIncidents={15}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -373,7 +384,8 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -391,7 +403,8 @@ describe('IncidentsPage', () => {
                         requestOptions={{ page: 0 }}
                         totalPages={0}
                         totalIncidents={0}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
@@ -412,7 +425,8 @@ describe('IncidentsPage', () => {
                         incidents={incidents}
                         requestOptions={{ page: 1 }}
                         totalPages={2}
-                        makeRequest={noop}
+                        makeIncidentsRequest={noop}
+                        makeIncidentsCountRequest={noop}
                     />
                 );
 
