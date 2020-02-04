@@ -20,7 +20,7 @@ export class SearchIncidents extends React.Component<IProps> {
         return (
             <QueryInput
                 data-test-id="search-incidents"
-                placeholder="SearchPanel case descriptions"
+                placeholder="Search on Stolen Bike Index"
                 value={text}
                 onChange={this.onChange}
             />

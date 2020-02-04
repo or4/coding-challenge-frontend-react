@@ -26,10 +26,10 @@ describe('TotalIncidents', () => {
         expect(wrapper.text()).toEqual(`Total: ${totalPages}`);
     });
 
-    it('should not render when total pages is not defined', () => {
+    it('should render when total pages is not defined', () => {
         const wrapper = shallow(<TotalIncidents />);
 
-        expect(wrapper.html()).toEqual(null);
+        expect(wrapper.text()).toEqual(`Total: 0`);
     });
 
     it('should render when total pages equal zero', () => {

@@ -6,9 +6,5 @@ export interface IProps {
 }
 
 export const TotalIncidents = ({ value }: IProps) => {
-    if (value !== 0 && !value) {
-        return null;
-    }
-
-    return <Container data-test-id="total-incidents">{`Total: ${value}`}</Container>;
+    return <Container data-test-id="total-incidents">{`Total: ${value || 0}`}</Container>;
 };

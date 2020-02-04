@@ -21,7 +21,7 @@ exports[`SearchIncidents should correct render 1`] = `
   className="c0"
   data-test-id="search-incidents"
   onChange={[Function]}
-  placeholder="SearchPanel case descriptions"
+  placeholder="Search on Stolen Bike Index"
   value="Berlin"
 />
 `;

@@ -420,7 +420,7 @@ describe('IncidentsPage', () => {
                 expect(container.text()).toEqual('Total: 15');
             });
 
-            it('should not render', () => {
+            it('should render when total incidents is not defined', () => {
                 const incidents: IIncident[] = getFakeIncidents(3);
                 const wrapper = mount(
                     <IncidentsPage
@@ -435,7 +435,7 @@ describe('IncidentsPage', () => {
                 const container = wrapper.find(TotalIncidents);
 
                 expect(container).toHaveLength(1);
-                expect(container.html()).toEqual(null);
+                expect(container.text()).toEqual('Total: 0');
             });
 
             it('should render when empty incidents', () => {

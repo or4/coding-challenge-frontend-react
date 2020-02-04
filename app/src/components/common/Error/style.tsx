@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-    margin-top: 40px;
+    margin-top: 20px;
     color: red;
 `;
