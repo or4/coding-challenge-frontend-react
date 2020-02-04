@@ -62,7 +62,10 @@ describe('Incidents redux tests', () => {
             const actions = store.getActions();
             const incidentsExpected = transform(incidents);
 
-            expect(actions).toEqual([new IncidentsRequest(options), new IncidentsRequestSuccess(incidentsExpected)]);
+            expect(actions).toEqual([
+                new IncidentsRequest(options),
+                new IncidentsRequestSuccess(incidentsExpected, { page }),
+            ]);
 
             const localState = applyActions(reducers, state, actions);
 

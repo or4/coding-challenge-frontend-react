@@ -44,7 +44,12 @@ export const transform: (incidents: IIncidentDb[]) => IIncident[] = incidents =>
     }));
 
 export function* incidentsCount({ options }: IncidentsCountRequest) {
-    const result = yield call(api.get, '/incidents', { ...defaultOptions, ...options, perPage: MAX_INCIDENTS_COUNT });
+    const result = yield call(api.get, '/incidents', {
+        ...defaultOptions,
+        ...options,
+        perPage: MAX_INCIDENTS_COUNT,
+        page: 1,
+    });
     const { data, status } = result;
 
     if (status === 200) {

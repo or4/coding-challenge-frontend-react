@@ -54,7 +54,7 @@ describe('IncidentsRequest', () => {
             const incidents: IIncident[] = [];
             const response = { data: { incidents }, status: 200 };
             // @ts-ignore
-            expect(generator.next(response).value).toEqual(put(new IncidentsRequestSuccess(incidents)));
+            expect(generator.next(response).value).toEqual(put(new IncidentsRequestSuccess(incidents, options)));
             expect(generator.next().done).toEqual(true);
         });
 

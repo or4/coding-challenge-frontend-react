@@ -13,7 +13,7 @@ export class IncidentsRequest implements Action {
     public readonly type = IncidentsActionType.IncidentsRequest;
     public options: Partial<IIncidentsRequestOptions>;
 
-    public constructor(options: Partial<IIncidentsRequestOptions> = {}) {
+    public constructor(options: Partial<IIncidentsRequestOptions> = { page: 1 }) {
         this.options = options;
     }
 }
@@ -23,7 +23,7 @@ export class IncidentsRequestSuccess implements Action {
     public incidents: IIncident[];
     public options: IIncidentsModifiedRequestOptions;
 
-    public constructor(incidents: IIncident[], options: IIncidentsModifiedRequestOptions = { page: 1 }) {
+    public constructor(incidents: IIncident[], options: IIncidentsModifiedRequestOptions) {
         this.incidents = incidents;
         this.options = options;
     }
@@ -42,7 +42,7 @@ export class IncidentsCountRequest implements Action {
     public readonly type = IncidentsActionType.IncidentsCountRequest;
     public options: Partial<IIncidentsRequestOptions>;
 
-    public constructor(options: Partial<IIncidentsRequestOptions> = {}) {
+    public constructor(options: Partial<IIncidentsRequestOptions> = { page: 1 }) {
         this.options = options;
     }
 }

@@ -67,7 +67,7 @@ describe('Incidents reducer', () => {
             const page = 1;
             const incidents: IIncident[] = [];
 
-            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, { page }))).toEqual({
                 ...state,
                 requesting: false,
                 incidents: [],
@@ -85,7 +85,7 @@ describe('Incidents reducer', () => {
             const page = 1;
             const incidents: IIncident[] = getFakeIncidents(3);
 
-            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, { page }))).toEqual({
                 ...state,
                 requesting: false,
                 incidents,
@@ -103,7 +103,7 @@ describe('Incidents reducer', () => {
             const page = 1;
             const incidents: IIncident[] = [];
 
-            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents))).toEqual({
+            expect(incidentsReducer(state, new IncidentsRequestSuccess(incidents, { page }))).toEqual({
                 ...state,
                 requesting: false,
                 incidents: [],

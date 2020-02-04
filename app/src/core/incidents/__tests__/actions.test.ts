@@ -72,7 +72,7 @@ describe('Check Incident actions', () => {
             const page = 1;
             const incidents: IIncident[] = [];
 
-            expect(new IncidentsRequestSuccess(incidents)).toEqual({
+            expect(new IncidentsRequestSuccess(incidents, { page })).toEqual({
                 type: 'Incidents/incidents request success',
                 incidents,
                 options: { page },
@@ -83,7 +83,7 @@ describe('Check Incident actions', () => {
             const page = 1;
             const incidents = getFakeIncidents(1);
 
-            expect(new IncidentsRequestSuccess(incidents)).toEqual({
+            expect(new IncidentsRequestSuccess(incidents, { page })).toEqual({
                 type: 'Incidents/incidents request success',
                 incidents,
                 options: { page },
@@ -94,7 +94,7 @@ describe('Check Incident actions', () => {
             const page = 1;
             const incidents = getFakeIncidents(3);
 
-            expect(new IncidentsRequestSuccess(incidents)).toEqual({
+            expect(new IncidentsRequestSuccess(incidents, { page })).toEqual({
                 type: 'Incidents/incidents request success',
                 incidents,
                 options: { page },
@@ -105,7 +105,7 @@ describe('Check Incident actions', () => {
             const page = 1;
             const incidents: IIncident[] = [];
 
-            expect(new IncidentsRequestSuccess(incidents)).toEqual({
+            expect(new IncidentsRequestSuccess(incidents, { page })).toEqual({
                 type: 'Incidents/incidents request success',
                 incidents,
                 options: { page },
