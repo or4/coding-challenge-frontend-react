@@ -1,0 +1,20 @@
+body {
+    margin: 0;
+    padding: 0;
+
+    font-family: Raleway, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    background-color: #fff;
+}
+
+input {
+    font-family: system-ui, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    outline: none;
+	height: 30px;
+    line-height: 30px;
+    box-sizing: border-box;
+	font-size: 16px;
+	padding: 3px 5px;
+	border: 1px solid rgb(238, 238, 238);
+}

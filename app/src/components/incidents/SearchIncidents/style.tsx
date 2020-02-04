@@ -1,10 +1,13 @@
 import styled from 'styled-components';
+import { media } from 'ui/utils';
 
-export const Container = styled.div`
-    min-height: 40px;
-    line-height: 40px;
-    text-align: right;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+export const QueryInput = styled.input`
+    min-width: 240px;
+    padding: 4px 8px;
+    flex-grow: 1;
+    margin: 5px 5px;
+
+    ${media.mobileNTablet`
+		width: 100%;
+	`}
 `;

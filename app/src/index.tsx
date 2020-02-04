@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom';
 import { isE2E } from 'utils/e2e';
 import { AppWithStore } from './App';
 
+import './reset.css';
+import './app.css';
+
 function renderApp() {
     ReactDOM.render(<AppWithStore />, document.getElementById('root'));
 }

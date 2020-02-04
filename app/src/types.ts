@@ -8,14 +8,12 @@ export interface IIncidentsRequestOptions {
     proximitySquare?: number; // Size of the proximity search
     page: number; // Page of results to fetch.
     perPage?: number; // Number of results to return per page.
+    query?: string;
 }
 
 export interface IIncidentsModifiedRequestOptions {
     page?: number;
-}
-
-export interface IIncidentSuccessRequestOptions {
-    page?: number;
+    query?: string;
 }
 
 export interface IIncident {

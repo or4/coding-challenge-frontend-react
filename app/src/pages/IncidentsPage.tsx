@@ -1,19 +1,20 @@
+import { isEqual, throttle } from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Dispatch, Action } from 'redux';
+import { Action, Dispatch } from 'redux';
 import styled from 'styled-components';
 
-import { Loading } from 'components/common/Loading';
-import { Incident } from 'components/incidents/Incident';
 import { Error } from 'components/common/Error';
+import { Loading } from 'components/common/Loading';
 import { EmptyResults } from 'components/incidents/EmptyResults';
+import { Incident } from 'components/incidents/Incident';
 import { Pagination } from 'components/incidents/Pagination';
+import { SearchIncidents } from 'components/incidents/SearchIncidents';
+import { TotalIncidents } from 'components/incidents/TotalIncidents';
+import { IncidentsCountRequest, IncidentsRequest } from 'core/incidents/actions';
 import { selectTotalPages } from 'core/incidents/reducers';
 import { IAppState } from 'core/reducers';
 import { IIncident, IIncidentsModifiedRequestOptions } from 'types';
-import { IncidentsRequest, IncidentsCountRequest } from 'core/incidents/actions';
-import { TotalIncidents } from 'components/incidents/TotalIncidents';
-import { SearchIncidents } from 'components/incidents/SearchIncidents';
 import { UpperPanel } from 'components/incidents/UpperPanel';
 
 export const Container = styled.div``;
@@ -32,30 +33,31 @@ interface IProps {
     error?: object;
 }
 
-export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
-    public shouldComponentUpdate(nextProps: IProps) {
-        if (nextProps) {
-            if (nextProps.requesting !== this.props.requesting) {
-                return true;
-            }
+export interface IState {
+    query?: string;
+}
 
-            if (nextProps.incidents.length === 0 && this.props.incidents.length === 0) {
-                return false;
-            }
+export class IncidentsPage extends React.Component<IProps & IDispatchProps, IState> {
+    public state: IState = {};
 
-            if (nextProps.incidents !== this.props.incidents) {
-                return true;
-            }
-
-            if (nextProps.totalPages !== this.props.totalPages) {
-                return true;
-            }
-        }
-
-        return false;
+    public shouldComponentUpdate(nextProps: IProps, nextState: IState) {
+        return !isEqual(nextProps, this.props) || !isEqual(nextState, this.state);
     }
 
     public render() {
+        const { totalIncidents } = this.props;
+        return (
+            <>
+                <UpperPanel>
+                    <SearchIncidents onChange={this.onChangeQuery} text={this.state.query || ''} />
+                </UpperPanel>
+                <TotalIncidents value={totalIncidents} />
+                {this.renderContent()}
+            </>
+        );
+    }
+
+    public renderContent() {
         if (this.props.error) {
             return <Error />;
         }
@@ -65,14 +67,10 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
         }
 
         const incidents = this.props.incidents || [];
-        const { requestOptions, totalPages, totalIncidents } = this.props;
+        const { requestOptions, totalPages } = this.props;
 
         return (
             <>
-                <UpperPanel>
-                    <SearchIncidents onChange={() => {}} text={''} />
-                    <TotalIncidents value={totalIncidents} />
-                </UpperPanel>
                 <Container data-test-id="incidents-list">
                     {incidents.length === 0 ? (
                         <EmptyResults />
@@ -95,6 +93,18 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps> {
         makeIncidentsRequest({ ...requestOptions, page });
         makeIncidentsCountRequest({ ...requestOptions });
     };
+
+    public onChangeQuery = (query: string) => {
+        this.setState({ query }, this.changeQueryRequest);
+    };
+
+    public changeQueryRequest = throttle(() => {
+        const { makeIncidentsRequest, makeIncidentsCountRequest, requestOptions } = this.props;
+        const { query } = this.state;
+
+        makeIncidentsRequest({ ...requestOptions, page: 1, query });
+        makeIncidentsCountRequest({ ...requestOptions, query });
+    }, 1000);
 }
 
 const mapStateToProps = (state: IAppState) => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container } from './style';
+import { QueryInput } from './style';
 
 export interface IProps {
     text?: string;
@@ -18,9 +18,12 @@ export class SearchIncidents extends React.Component<IProps> {
         const { text = '' } = this.props;
 
         return (
-            <Container data-test-id="search-incidents">
-                <input value={text} onChange={this.onChange} />
-            </Container>
+            <QueryInput
+                data-test-id="search-incidents"
+                placeholder="SearchPanel case descriptions"
+                value={text}
+                onChange={this.onChange}
+            />
         );
     }
 }
