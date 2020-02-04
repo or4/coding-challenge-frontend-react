@@ -2,7 +2,7 @@ import { IIncident, IIncidentsModifiedRequestOptions } from 'types';
 import { IAppState } from 'core/reducers';
 
 import { IncidentsActionType, IncidentsActions } from './actions';
-import { INCIDENTS_PER_PAGE, MAX_INCIDENTS_COUNT } from './contstants';
+import { INCIDENTS_PER_PAGE } from './contstants';
 
 export interface IIncidentsState {
     requesting?: boolean;
@@ -19,10 +19,6 @@ export const initialState: IIncidentsState = {
 export const incidentsReducer = (state: IIncidentsState = initialState, action: IncidentsActions) => {
     switch (action.type) {
         case IncidentsActionType.IncidentsRequest:
-            if (action.options.perPage === MAX_INCIDENTS_COUNT) {
-                return state;
-            }
-
             return { ...state, requesting: true };
 
         case IncidentsActionType.IncidentsRequestSuccess:

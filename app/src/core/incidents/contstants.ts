@@ -11,7 +11,3 @@ export const defaultOptions: IIncidentsRequestOptions = {
 };
 
 export const MAX_INCIDENTS_COUNT = 10000;
-export const maxIncidentsCountOptions: IIncidentsRequestOptions = {
-    ...defaultOptions,
-    perPage: MAX_INCIDENTS_COUNT,
-};
