@@ -230,7 +230,7 @@ describe('Behaviour. Incidents list', () => {
             return this.browser
                 .url('/')
                 .execute(appStart)
-                .waitForVisible('[data-test-id="search-incidents"]', timeout)
+                .waitForVisible('[data-test-id="search-incidents__query"]', timeout)
                 .execute(() => {
                     const firstIncident = document.body.querySelector('[data-test-id="incident"]');
 
@@ -240,11 +240,13 @@ describe('Behaviour. Incidents list', () => {
                     prevTitle = result.value;
                 })
                 .execute(() => {
-                    const searchInput = document.body.querySelector('[data-test-id="search-incidents__input"]');
+                    const searchInput = document.body.querySelector('[data-test-id="search-incidents__query__input"]');
                     const searchQuery = 'yellow';
                     searchInput.value = searchQuery;
 
-                    const searchButton = document.body.querySelector('[data-test-id="search-incidents__button"]');
+                    const searchButton = document.body.querySelector(
+                        '[data-test-id="search-incidents__query__button"]'
+                    );
                     searchButton.click();
                 })
                 .then(() => {})

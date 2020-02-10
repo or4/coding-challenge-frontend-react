@@ -8,3 +8,11 @@ export function dateToString(date: number): string | null {
 
     return new Date(ts).toDateString();
 }
+
+export function addDays(date: Date, days = 1) {
+    const result = new Date(date);
+
+    result.setDate(result.getDate() + days);
+
+    return result;
+}

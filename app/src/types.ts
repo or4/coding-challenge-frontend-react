@@ -9,11 +9,15 @@ export interface IIncidentsRequestOptions {
     page: number; // Page of results to fetch.
     perPage?: number; // Number of results to return per page.
     query?: string;
+    occurredBefore?: number;
+    occurredAfter?: number;
 }
 
 export interface IIncidentsModifiedRequestOptions {
     page?: number;
     query?: string;
+    occurredBefore?: number;
+    occurredAfter?: number;
 }
 
 export interface IIncident {

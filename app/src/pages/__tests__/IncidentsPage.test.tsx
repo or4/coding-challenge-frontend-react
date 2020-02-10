@@ -15,6 +15,7 @@ import { EmptyResults } from 'components/incidents/EmptyResults';
 import { Pagination } from 'components/incidents/Pagination';
 import { Button } from 'components/incidents/Pagination/style';
 import { SearchIncidents } from 'components/incidents/SearchIncidents';
+import { QueryInput } from 'components/incidents/SearchIncidents/style';
 import { TotalIncidents } from 'components/incidents/TotalIncidents';
 import { UpperPanel } from 'components/incidents/UpperPanel';
 import { api } from 'core/api';
@@ -391,7 +392,7 @@ describe('IncidentsPage', () => {
 
                 const html = container.html();
 
-                const searchIncidentsIndex = html.indexOf('data-test-id="search-incidents"');
+                const searchIncidentsIndex = html.indexOf('data-test-id="search-incidents__query"');
                 const totalIncidentsIndex = html.indexOf('data-test-id="total-incidents"');
 
                 expect(searchIncidentsIndex).toBeGreaterThan(-1);
@@ -461,122 +462,267 @@ describe('IncidentsPage', () => {
         });
 
         describe('SearchIncidents', () => {
-            it('should exists', () => {
-                const incidents: IIncident[] = getFakeIncidents(3);
-                const wrapper = mount(
-                    <IncidentsPage
-                        incidents={incidents}
-                        requestOptions={{ page: 1 }}
-                        totalPages={2}
-                        makeIncidentsRequest={noop}
-                        makeIncidentsCountRequest={noop}
-                    />
-                );
+            describe('Common', () => {
+                it('should exists', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const wrapper = mount(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={noop}
+                            makeIncidentsCountRequest={noop}
+                        />
+                    );
 
-                const container = wrapper.find(SearchIncidents);
+                    const container = wrapper.find(SearchIncidents);
 
-                expect(container).toHaveLength(1);
+                    expect(container).toHaveLength(1);
+                });
             });
 
-            it('should change state when input value is changed', () => {
-                const incidents: IIncident[] = getFakeIncidents(3);
-                const wrapper = mount<IncidentsPage>(
-                    <IncidentsPage
-                        incidents={incidents}
-                        requestOptions={{ page: 1 }}
-                        totalPages={2}
-                        makeIncidentsRequest={noop}
-                        makeIncidentsCountRequest={noop}
-                    />
-                );
+            describe('QueryInput', () => {
+                it('should exists', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const wrapper = mount(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={noop}
+                            makeIncidentsCountRequest={noop}
+                        />
+                    );
 
-                const text = 'Berlin';
-                const fn = jest.spyOn(wrapper.instance(), 'onChangeQuery');
-                wrapper.instance().forceUpdate();
+                    const container = wrapper.find(QueryInput);
 
-                const domNode = wrapper
-                    .find(SearchIncidents)
-                    .find('input')
-                    .getDOMNode<HTMLInputElement>();
-                domNode.value = text;
+                    expect(container).toHaveLength(1);
+                });
 
-                wrapper.find('input').simulate('change');
+                it('should change state when input value is changed', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const query = 'Berlin';
+                    const wrapper = mount<IncidentsPage>(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1, query }}
+                            totalPages={2}
+                            makeIncidentsRequest={noop}
+                            makeIncidentsCountRequest={noop}
+                        />
+                    );
 
-                expect(wrapper.state<IState>('query')).toBe(text);
-                expect(fn).toHaveBeenCalledTimes(1);
+                    const fn = jest.spyOn(wrapper.instance(), 'onChangeQuery');
+                    wrapper.instance().forceUpdate();
+
+                    const input = wrapper
+                        .find(SearchIncidents)
+                        .find('[data-test-id="search-incidents__query"]')
+                        .hostNodes()
+                        .getDOMNode<HTMLInputElement>();
+
+                    const text = 'Hamburg';
+                    input.value = text;
+
+                    wrapper
+                        .find('[data-test-id="search-incidents__query"]')
+                        .hostNodes()
+                        .simulate('change');
+
+                    expect(wrapper.state<IState>('query')).toBe(text);
+                    expect(fn).toHaveBeenCalledTimes(1);
+                });
+
+                it('should call makeRequest when query changed', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const spyMakeIncidentsRequest = jest.fn();
+                    const spyMakeIncidentsCountRequest = jest.fn();
+
+                    const wrapper = mount<IncidentsPage>(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={spyMakeIncidentsRequest}
+                            makeIncidentsCountRequest={spyMakeIncidentsCountRequest}
+                        />
+                    );
+
+                    const text = 'Berlin';
+                    const spyMakeRequest = jest.spyOn(wrapper.instance(), 'makeRequest');
+                    wrapper.instance().forceUpdate();
+
+                    const domNode = wrapper
+                        .find(SearchIncidents)
+                        .find('[data-test-id="search-incidents__query"]')
+                        .hostNodes()
+                        .getDOMNode<HTMLInputElement>();
+                    domNode.value = text;
+
+                    wrapper
+                        .find('[data-test-id="search-incidents__query"]')
+                        .hostNodes()
+                        .simulate('change');
+
+                    expect(wrapper.state<IState>('query')).toBe(text);
+                    expect(spyMakeRequest).toHaveBeenCalledTimes(1);
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+                });
+
+                it('should work with throttling', async done => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const spyMakeIncidentsRequest = jest.fn();
+                    const spyMakeIncidentsCountRequest = jest.fn();
+
+                    const wrapper = mount<IncidentsPage>(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={spyMakeIncidentsRequest}
+                            makeIncidentsCountRequest={spyMakeIncidentsCountRequest}
+                        />
+                    );
+
+                    const spyMakeRequest = jest.spyOn(wrapper.instance(), 'makeRequest');
+                    wrapper.instance().forceUpdate();
+
+                    const domNode = wrapper
+                        .find(SearchIncidents)
+                        .find('[data-test-id="search-incidents__query"]')
+                        .hostNodes()
+                        .getDOMNode<HTMLInputElement>();
+
+                    const text = 'Berlin';
+
+                    for (let i = 1; i <= text.length; i++) {
+                        domNode.value = text.slice(0, i);
+                        wrapper
+                            .find('[data-test-id="search-incidents__query"]')
+                            .hostNodes()
+                            .simulate('change');
+
+                        await delay(100);
+                    }
+
+                    expect(wrapper.state<IState>('query')).toBe(text);
+                    expect(spyMakeRequest).toHaveBeenCalledTimes(6);
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+
+                    done();
+                });
             });
 
-            it('should call changeQueryRequest when query changed', () => {
-                const incidents: IIncident[] = getFakeIncidents(3);
-                const spyMakeIncidentsRequest = jest.fn();
-                const spyMakeIncidentsCountRequest = jest.fn();
+            describe('DateFrom', () => {
+                it('should exists', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const wrapper = mount(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={noop}
+                            makeIncidentsCountRequest={noop}
+                        />
+                    );
 
-                const wrapper = mount<IncidentsPage>(
-                    <IncidentsPage
-                        incidents={incidents}
-                        requestOptions={{ page: 1 }}
-                        totalPages={2}
-                        makeIncidentsRequest={spyMakeIncidentsRequest}
-                        makeIncidentsCountRequest={spyMakeIncidentsCountRequest}
-                    />
-                );
+                    const container = wrapper.find('[data-test-id="search-incidents__date-from"]').hostNodes();
 
-                const text = 'Berlin';
-                const spyChangeQueryRequest = jest.spyOn(wrapper.instance(), 'changeQueryRequest');
-                wrapper.instance().forceUpdate();
+                    expect(container).toHaveLength(1);
+                });
 
-                const domNode = wrapper
-                    .find(SearchIncidents)
-                    .find('input')
-                    .getDOMNode<HTMLInputElement>();
-                domNode.value = text;
+                it('should call makeIncidentsRequest when call onChangeFrom', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const spyMakeIncidentsRequest = jest.fn();
+                    const spyMakeIncidentsCountRequest = jest.fn();
 
-                wrapper.find('input').simulate('change');
+                    const wrapper = mount<IncidentsPage>(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={spyMakeIncidentsRequest}
+                            makeIncidentsCountRequest={spyMakeIncidentsCountRequest}
+                        />
+                    );
 
-                expect(wrapper.state<IState>('query')).toBe(text);
-                expect(spyChangeQueryRequest).toHaveBeenCalledTimes(1);
-                expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
-                expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+                    const instance = wrapper.instance();
+                    const spyMakeRequest = jest.spyOn(instance, 'makeRequest');
+
+                    wrapper.instance().forceUpdate();
+
+                    instance.onChangeFrom(new Date());
+
+                    expect(spyMakeRequest).toHaveBeenCalledTimes(1);
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+                    expect(spyMakeIncidentsCountRequest).toHaveBeenCalledTimes(1);
+
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledWith({
+                        from: expect.any(Date),
+                        page: 1,
+                    });
+                    expect(spyMakeIncidentsCountRequest).toHaveBeenCalledWith({
+                        from: expect.any(Date),
+                        page: 1,
+                    });
+                });
             });
 
-            it('should work with throttling', async done => {
-                const incidents: IIncident[] = getFakeIncidents(3);
-                const spyMakeIncidentsRequest = jest.fn();
-                const spyMakeIncidentsCountRequest = jest.fn();
+            describe('DateTo', () => {
+                it('should exists', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const wrapper = mount(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={noop}
+                            makeIncidentsCountRequest={noop}
+                        />
+                    );
 
-                const wrapper = mount<IncidentsPage>(
-                    <IncidentsPage
-                        incidents={incidents}
-                        requestOptions={{ page: 1 }}
-                        totalPages={2}
-                        makeIncidentsRequest={spyMakeIncidentsRequest}
-                        makeIncidentsCountRequest={spyMakeIncidentsCountRequest}
-                    />
-                );
+                    const container = wrapper.find('[data-test-id="search-incidents__date-to"]').hostNodes();
 
-                const spyChangeQueryRequest = jest.spyOn(wrapper.instance(), 'changeQueryRequest');
-                wrapper.instance().forceUpdate();
+                    expect(container).toHaveLength(1);
+                });
 
-                const domNode = wrapper
-                    .find(SearchIncidents)
-                    .find('input')
-                    .getDOMNode<HTMLInputElement>();
+                it('should call makeIncidentsRequest when call onChangeTo', () => {
+                    const incidents: IIncident[] = getFakeIncidents(3);
+                    const spyMakeIncidentsRequest = jest.fn();
+                    const spyMakeIncidentsCountRequest = jest.fn();
 
-                const text = 'Berlin';
+                    const wrapper = mount<IncidentsPage>(
+                        <IncidentsPage
+                            incidents={incidents}
+                            requestOptions={{ page: 1 }}
+                            totalPages={2}
+                            makeIncidentsRequest={spyMakeIncidentsRequest}
+                            makeIncidentsCountRequest={spyMakeIncidentsCountRequest}
+                        />
+                    );
 
-                for (let i = 1; i <= text.length; i++) {
-                    domNode.value = text.slice(0, i);
-                    wrapper.find('input').simulate('change');
+                    const instance = wrapper.instance();
+                    const spyMakeRequest = jest.spyOn(instance, 'makeRequest');
 
-                    await delay(100);
-                }
+                    wrapper.instance().forceUpdate();
 
-                expect(wrapper.state<IState>('query')).toBe(text);
-                expect(spyChangeQueryRequest).toHaveBeenCalledTimes(6);
-                expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
-                expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+                    instance.onChangeTo(new Date());
 
-                done();
+                    expect(spyMakeRequest).toHaveBeenCalledTimes(1);
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledTimes(1);
+                    expect(spyMakeIncidentsCountRequest).toHaveBeenCalledTimes(1);
+
+                    expect(spyMakeIncidentsRequest).toHaveBeenCalledWith({
+                        to: expect.any(Date),
+                        page: 1,
+                    });
+                    expect(spyMakeIncidentsCountRequest).toHaveBeenCalledWith({
+                        to: expect.any(Date),
+                        page: 1,
+                    });
+                });
             });
         });
     });

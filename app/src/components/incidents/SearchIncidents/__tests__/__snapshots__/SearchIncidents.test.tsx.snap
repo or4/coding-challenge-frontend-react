@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SearchIncidents should correct render 1`] = `
-.c0 {
+exports[`SearchIncidents common should correct render 1`] = `
+Array [
+  .c0 {
   min-width: 240px;
   padding: 4px 8px;
   -webkit-box-flex: 1;
@@ -18,10 +19,115 @@ exports[`SearchIncidents should correct render 1`] = `
 }
 
 <input
-  className="c0"
-  data-test-id="search-incidents"
-  onChange={[Function]}
-  placeholder="Search on Stolen Bike Index"
-  value="Berlin"
-/>
+    className="c0"
+    data-test-id="search-incidents__query"
+    onChange={[Function]}
+    placeholder="Search on Stolen Bike Index"
+    value="Berlin"
+  />,
+  .c0 {
+  margin: 5px 5px;
+}
+
+.c0 input {
+  width: 180px;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    width: 100%;
+  }
+
+  .c0 .react-datepicker-wrapper {
+    width: 100%;
+  }
+
+  .c0 .react-datepicker__input-container {
+    width: 100%;
+  }
+
+  .c0 input {
+    width: 100%;
+  }
+}
+
+<div
+    className="c0"
+    data-test-id="search-incidents__date-from"
+  >
+    <div
+      className="react-datepicker-wrapper"
+    >
+      <div
+        className="react-datepicker__input-container"
+      >
+        <input
+          className=""
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          placeholder="from"
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>,
+  .c0 {
+  margin: 5px 5px;
+}
+
+.c0 input {
+  width: 180px;
+}
+
+@media (max-width:479px) {
+  .c0 {
+    width: 100%;
+  }
+
+  .c0 .react-datepicker-wrapper {
+    width: 100%;
+  }
+
+  .c0 .react-datepicker__input-container {
+    width: 100%;
+  }
+
+  .c0 input {
+    width: 100%;
+  }
+}
+
+<div
+    className="c0"
+    data-test-id="search-incidents__date-to"
+  >
+    <div
+      className="react-datepicker-wrapper"
+    >
+      <div
+        className="react-datepicker__input-container"
+      >
+        <input
+          className=""
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          placeholder="to"
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>,
+]
 `;

@@ -16,6 +16,8 @@ import { selectTotalPages } from 'core/incidents/reducers';
 import { IAppState } from 'core/reducers';
 import { IIncident, IIncidentsModifiedRequestOptions } from 'types';
 import { UpperPanel } from 'components/incidents/UpperPanel';
+import { convertToUnixTimestamp } from 'utils/unixTimestamp';
+import { addDays } from 'utils/dateFormat';
 
 export const Container = styled.div``;
 
@@ -35,6 +37,8 @@ interface IProps {
 
 export interface IState {
     query?: string;
+    from?: Date | null;
+    to?: Date | null;
 }
 
 export class IncidentsPage extends React.Component<IProps & IDispatchProps, IState> {
@@ -46,10 +50,18 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps, ISta
 
     public render() {
         const { totalIncidents } = this.props;
+        const { from, to } = this.state;
         return (
             <>
                 <UpperPanel>
-                    <SearchIncidents onChange={this.onChangeQuery} text={this.state.query || ''} />
+                    <SearchIncidents
+                        text={this.state.query || ''}
+                        onChangeQuery={this.onChangeQuery}
+                        from={from}
+                        onChangeFrom={this.onChangeFrom}
+                        to={to}
+                        onChangeTo={this.onChangeTo}
+                    />
                 </UpperPanel>
                 <TotalIncidents value={totalIncidents} />
                 {this.renderContent()}
@@ -68,15 +80,17 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps, ISta
 
         const incidents = this.props.incidents || [];
         const { requestOptions, totalPages } = this.props;
+        const content =
+            incidents.length === 0 ? (
+                <EmptyResults />
+            ) : (
+                incidents.map((incident, index) => <Incident key={index} {...incident} />)
+            );
 
         return (
             <>
                 <Container data-test-id="incidents-list">
-                    {incidents.length === 0 ? (
-                        <EmptyResults />
-                    ) : (
-                        incidents.map((incident, index) => <Incident key={index} {...incident} />)
-                    )}
+                    {content}
                     <Pagination
                         currentPage={requestOptions.page || 0}
                         totalPages={totalPages}
@@ -95,15 +109,39 @@ export class IncidentsPage extends React.Component<IProps & IDispatchProps, ISta
     };
 
     public onChangeQuery = (query: string) => {
-        this.setState({ query }, this.changeQueryRequest);
+        this.setState({ query }, this.makeRequest);
     };
 
-    public changeQueryRequest = throttle(() => {
-        const { makeIncidentsRequest, makeIncidentsCountRequest, requestOptions } = this.props;
-        const { query } = this.state;
+    public onChangeFrom = (value?: Date | null) => {
+        const { to } = this.state;
 
-        makeIncidentsRequest({ ...requestOptions, page: 1, query });
-        makeIncidentsCountRequest({ ...requestOptions, query });
+        if (!to || (value && value < to)) {
+            this.setState({ from: value }, this.makeRequest);
+        }
+    };
+
+    public onChangeTo = (value?: Date | null) => {
+        const { from } = this.state;
+
+        if (!from || (value && value > from)) {
+            this.setState({ to: value }, this.makeRequest);
+        }
+    };
+
+    public makeRequest = throttle(() => {
+        const { makeIncidentsRequest, makeIncidentsCountRequest, requestOptions } = this.props;
+        const { query, from, to } = this.state;
+
+        const toPlusDay = to && addDays(to);
+
+        const options = {
+            query,
+            ...(from ? { occurredAfter: convertToUnixTimestamp(+from) } : {}),
+            ...(toPlusDay ? { occurredBefore: convertToUnixTimestamp(+toPlusDay) } : {}),
+        };
+
+        makeIncidentsRequest({ ...requestOptions, page: 1, ...options });
+        makeIncidentsCountRequest({ ...requestOptions, ...options });
     }, 1000);
 }
 

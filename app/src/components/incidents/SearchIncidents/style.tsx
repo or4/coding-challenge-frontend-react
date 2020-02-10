@@ -11,3 +11,27 @@ export const QueryInput = styled.input`
 		width: 100%;
 	`}
 `;
+
+export const DatePickerWrapper = styled.div`
+    margin: 5px 5px;
+
+    & input {
+        width: 180px;
+    }
+
+    ${media.mobile`
+		width: 100%;
+
+		& .react-datepicker-wrapper {
+			width: 100%;
+		}
+
+		& .react-datepicker__input-container {
+			width: 100%;
+		}
+
+		& input {
+			width: 100%;
+		}
+	`}
+`;

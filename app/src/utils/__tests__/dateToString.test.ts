@@ -1,4 +1,4 @@
-import { dateToString } from 'utils/dateFormat';
+import { dateToString, addDays } from 'utils/dateFormat';
 
 describe('dateToString', () => {
     it('should return correct format date', () => {
@@ -15,5 +15,22 @@ describe('dateToString', () => {
         expect(dateToString('343af2sf')).toBe(null);
         // @ts-ignore
         expect(dateToString(true)).toBe(null);
+    });
+});
+
+describe('addDays', () => {
+    it('should add one day', () => {
+        const date = new Date(0);
+        expect(addDays(date, 1).toDateString()).toBe('Fri Jan 02 1970');
+    });
+
+    it('should add one day without secod argument', () => {
+        const date = new Date(0);
+        expect(addDays(date).toDateString()).toBe('Fri Jan 02 1970');
+    });
+
+    it('should now work without arguments', () => {
+        // @ts-ignore
+        expect(addDays().toDateString()).toBe('Invalid Date');
     });
 });
